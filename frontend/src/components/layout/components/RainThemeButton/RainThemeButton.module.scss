@@ -1,0 +1,19 @@
+.wrapper {
+    z-index: 99;
+    position: absolute;
+    top: 15%;
+    right: 20%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    padding: 16px;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+    cursor: pointer;
+
+    &:hover {
+        color: #91ccc2;
+        background-color: rgba(0, 0, 0, 0.6);
+        box-shadow: 0 5px 5px rgb(0 0 0 / 20%);
+    }
+}

@@ -1,0 +1,56 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.box {
+    position: absolute;
+    top: 40%;
+    left: 20%;
+    font-size: 60px;
+    background-color: #fff; 
+    text-align: center;
+    & h1{
+        color: red
+    } 
+
+    & span { 
+        opacity: 0.6;
+        font-style: italic;
+        color: #000;
+        font-size: 20px;
+    }
+} 
+
+.image {
+    width: 100vw;
+    height: 100vh;
+} 
+
+.btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 30px;
+    color: #000; 
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+
+    & span {
+        font-size: 20px;
+    }
+
+    
+    &:hover{
+        font-weight: 800;
+        color: var(--color-primary);        
+    }
+} 
+
+.hint {
+    position: absolute;
+    top: 50%;
+
+}

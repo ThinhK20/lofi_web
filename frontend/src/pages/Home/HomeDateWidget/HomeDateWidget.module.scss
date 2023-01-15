@@ -1,0 +1,53 @@
+.wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10%;
+    color: #fff;
+    text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
+    max-width: 580px;
+}
+
+.date-status {
+}
+
+.date-welcome {
+    margin-bottom: 10px;
+}
+
+.date-time {
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: 400;
+}
+
+.date-content {
+    line-height: 2.2rem;
+    font-style: italic;
+}
+
+.date-quotes {
+}
+
+.date-box {
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.date-hours {
+    margin-right: 40px;
+}
+
+.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: x-large;
+    color: #000;
+    &:hover {
+        filter: brightness(0.8);
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,135 @@
+.wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: transparent;
+    padding: 0 48px;
+    z-index: 1;
+}
+
+.logo {
+    img {
+        max-width: 150px;
+        max-height: 150px;
+        object-fit: cover;
+        border-style: none;
+        vertical-align: middle;
+    }
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.time-box {
+    background-color: hsla(0, 0%, 100%, 0.15);
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 6px;
+    font-weight: 400;
+}
+
+.switch-btn {
+    background-color: var(--color-primary);
+    color: #fff;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.dark {
+    background-color: #001e3c;
+
+    .slider {
+        transform: translateX(-100%);
+    }
+
+    .switch-icon {
+        transform: translateX(100%);
+    }
+}
+
+.slider {
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+}
+
+.switch-icon {
+    padding: 5px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.4s ease;
+}
+
+
+.authentication-btn {
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    min-width: 0;
+    padding: 5px 16px;
+    width: auto;
+    background: rgba(0, 0, 0, 0.85);
+    cursor: pointer;
+    color: #fff;
+    font-weight: 500;
+    transition: all 0.4s ease;
+
+    &:hover {
+        opacity: 0.4;
+    }
+}
+
+.options {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.option-btn {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 400;
+    &:hover {
+        opacity: 0.4;
+    }
+}
+
+
+.user-wrapper {
+    background-color: transparent;
+}
+
+.user-avatar {
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+
+}

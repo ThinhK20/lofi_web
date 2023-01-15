@@ -1,0 +1,35 @@
+.wrapper {
+    background-color: rgba(0, 0, 0, 0.45);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 170px;
+    transition: all 0.4s ease;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    padding: 6px 12px;
+    transition: all 0.2s ease;
+    gap: var(--size-m);
+    height: 34px;
+    &:hover {
+        background: var(--gradient-bg);
+    }
+}
+
+.icon {
+    height: 1.6rem;
+    width: 1.6rem;
+    color: #fff;
+}
+.name {
+    color: #fff;
+    display: inline-block;
+    font-size: 1.4rem;
+    font-weight: 400;
+}

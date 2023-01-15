@@ -1,0 +1,289 @@
+.wrapper {
+    --height-lateral: 55px;
+    --width-lateral: 60px;
+    position: absolute;
+    top: 30%;
+    right: 20px;
+    background-color: #121212;
+    border-radius: 24px;
+}
+.options {
+    padding: 16px 0;
+}
+
+.options-item {
+    height: var(--height-lateral);
+    width: var(--width-lateral);
+    z-index: 1;
+}
+
+.options-icon {
+    font-size: 2.2rem;
+    border-radius: 12px;
+    user-select: none;
+}
+
+.options-tippy {
+    min-width: 350px;
+    padding: 0 !important;
+    top: -50px;
+}
+
+.options-tippy-wrapper {
+    padding: 20px 32px 0 32px;
+}
+
+.tippy-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &-text {
+        font-size: 2rem;
+        line-height: 2.4rem;
+        color: #fff;
+        font-weight: 700; 
+        width: 100%;
+
+        &-sub {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: var(--color-default);
+            opacity: 0.4;
+            margin: 16px 0;
+            display: block;
+        }
+    }
+
+    &-img {
+        color: #fff;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.mood-box-btn {
+    display: flex;
+    align-items: center;
+    margin: 32px 0;
+    justify-content: space-between;
+}
+
+.mood-btn {
+    min-width: 82px;
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #191919;
+    border-radius: 12px;
+    cursor: pointer;
+
+    &:hover &-text {
+        color: #fff;
+        opacity: 0.6;
+    }
+
+    &:hover &-icon {
+        color: #fff;
+        opacity: 0.6;
+    }
+}
+
+.mood-btn-icon {
+    transition: all 0.2s ease;
+    font-size: 3.5rem;
+}
+
+.mood-btn-text {
+    transition: all 0.2s ease;
+
+    margin-top: 12px;
+    font-size: 1.6rem;
+    color: var(--color-default);
+    opacity: 0.4;
+}
+
+.mood-main-audio {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 32px 0;
+}
+
+.mood-main-audio-icon {
+    color: var(--color-primary);
+    font-size: 1.8rem;  
+    transition: all 0.3s ease;
+
+    &:hover {
+        cursor: pointer;
+        scale: 1.4;
+        border-radius: 100%;
+    }
+}
+
+.mood-main-audio-slider {
+    flex: 1;
+    margin: 0 32px;
+    height: 10px;
+}
+
+.noise-sound-box {
+    margin: 16px 0 8px 0;
+    max-height: 220px;
+    overflow: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.noise-sound-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+.noise-sound-name {
+    flex-basis: 40%;
+    font-size: 1.5rem;
+    display: inline-block;
+    margin-right: 16px;
+    color: var(--color-default);
+    opacity: 0.4;
+    user-select: none;
+}
+
+.noise-sound-slider {
+    flex: 1;
+}
+
+.footer {
+    align-items: center;
+    background-color: var(--color-bgd-200);
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    height: 45px;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+        filter: brightness(0.8);
+    }
+}
+
+.footer-text {
+    color: #fff;
+    opacity: 0.6;
+}
+
+.templates-panel {
+    margin: 32px 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+.template-img {
+    height: 120px;
+    cursor: pointer;
+    object-fit: cover;
+    transition: all 0.4s ease;
+
+    &:hover {
+        filter: brightness(0.6);
+    }
+}
+
+.scenes-tippy {
+    overflow: scroll;
+    max-height: 600px;
+    top: -200px;
+    padding-bottom: 32px;
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.scenes-tippy-wrapper {
+    max-height: 600px;
+    margin-top: 8px;
+}
+
+.scenes {
+    margin: 16px 0 32px 0;
+    max-height: 500px;
+    overflow: scroll;
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.scene-background {
+    border-radius: 16px;
+    height: 190px;
+    object-fit: cover;
+    width: 100%;
+    margin: 8px 0;
+    transition: all 0.4s ease;
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(0.6);
+    }
+}
+
+
+.tippy-song-card {
+    display: flex;
+    align-items: center; 
+    padding: 8px 20px; 
+    justify-content: space-between;
+    width: 100%;
+    opacity: 0.6;
+    transition: all 0.4s ease; 
+
+    &:hover {
+        cursor: pointer;
+        opacity: 1; 
+        color: var(--color-primary);
+    }
+
+    &.active {
+        color: var(--color-primary); 
+        opacity: 1;
+    }
+}
+
+.tippy-song-title {
+    font-weight: 400;
+    font-size: 1.6rem;     
+}
+
+.tippy-song-play-icon {
+    font-size: 2.5rem;
+} 
+
+.hidden-scroll {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */ 
+    overflow: auto;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}

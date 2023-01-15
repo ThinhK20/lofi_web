@@ -1,0 +1,150 @@
+.wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--color-default);
+    background-color: #181e2e;
+}
+
+.logo {
+    height: 130px;
+}
+
+.content {
+}
+
+.heading {
+    text-align: center;
+
+    margin: 16px 0;
+}
+
+.heading-welcome {
+    margin: 16px 0;
+    font-size: 4.6rem;
+    font-weight: 700;
+}
+
+.heading-content {
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+.form {
+    padding: 8px 0;
+    min-width: 460px;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    padding: 32px 0;
+    gap: 16px;
+}
+
+.input-label {
+    padding: 8px 0;
+    display: block;
+}
+
+.input-item {
+    width: 100%;
+}
+
+.input {
+    background-color: #1f2329;
+    caret-color: var(--color-primary);
+    color: var(--color-default);
+    font-size: 16px;
+    font-weight: 400;
+    outline: none;
+    padding: 16px;
+    transition: all 0.3s ease;
+    width: 100%;
+    border-radius: 12px;
+}
+
+.policy-text {
+    font-size: 1.4rem;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a {
+        color: var(--color-primary);
+        font-size: 1.4rem;
+        margin: 8px 4px;
+    }
+}
+
+.signup-btn-box {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    margin: 16px 0;
+    transition: all 0.4s ease;
+
+    
+}
+
+.signup-btn { 
+    cursor: pointer;
+    padding: 8px 16px;
+    color: #000;
+    background-color: var(--color-primary);
+    border-radius: 32px;
+    font-weight: 600;
+    min-width: 120px;
+    transition: all 0.3s ease;
+    display: block;
+    font-size: 1.6rem;
+    text-align: center; 
+
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+.footer {
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.footer-text {
+    color: var(--color-default);
+}
+
+.login {
+    color: var(--color-primary);
+}
+
+.back-menu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    color: var(--color-default);
+
+    &:hover {
+        cursor: pointer;
+        opacity: 1;
+    }
+}
+
+.back-icon {
+    font-size: 2rem;
+}
+
+.back-content {
+    font-size: 1.4rem;
+    font-weight: 400;
+}
