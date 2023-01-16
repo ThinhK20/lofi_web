@@ -1,7 +1,6 @@
 import classNames from "classnames/bind";
 import React, { memo } from "react";
 import { useSelector } from "react-redux";
-import AudioStorage from "~/components/layout/components/AudioStorage";
 import RainThemeButton from "~/components/layout/components/RainThemeButton";
 
 import styles from "./Home.module.scss";
@@ -15,7 +14,6 @@ function Home() {
     const homeWidgetState = useSelector((state) => state.general).activeDateWidget;
     return ( 
             <section className={cx("wrapper")}> 
-                    {/* <AudioStorage/> */}
                     <HomeThemeControl />
                     <RainThemeButton />
                     <HomeLateralMenu />

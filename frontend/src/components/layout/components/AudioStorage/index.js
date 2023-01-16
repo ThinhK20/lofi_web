@@ -3,7 +3,7 @@ import { memo,  useMemo } from "react";
 import audioAPI from "~/api/audioAPI";
 
 let audioNoiseData = null;
-let songs = null;
+let audioSongs = null;
 
 const AudioStorage = () => {
     const { data: audioNoiseResponse, isSuccess: isAudioNoiseSuccess } = useQuery({
@@ -20,10 +20,12 @@ const AudioStorage = () => {
         staleTime: Infinity,
     });
 
-    songs = useMemo(() => {
+    audioSongs = useMemo(() => {
         if (isAudioSuccess) {
             return audioResponse.data.map((curr) => {
-                return new Audio(audioAPI.renderAudio(curr.audioName));
+                const newSong = new Audio(audioAPI.renderAudio(curr.audioName));
+                newSong.loop = true
+                return newSong
             }, []);
         }
         return [];
@@ -79,33 +81,34 @@ const useNoise = {
 
 const useSongs = {
     playSong: (index) => {
-        if (songs) {
-            songs[index]?.play();
+        if (audioSongs) {
+            audioSongs[index]?.play();
         }
     },
     pauseSong: (index) => {
-        if (songs) {
-            songs[index]?.pause();
+        if (audioSongs) {
+            audioSongs[index]?.pause();
         }
     },
     adjustVolume: (index, value) => {
-        if (songs) {
-            songs[index].volume = value;
+        if (audioSongs) {
+            audioSongs[index].volume = value;
         }
     },
     muteVolume: (index, value) => {
-        if (songs) {
-            songs[index].muted = value;
+        if (audioSongs) {
+            audioSongs[index].muted = value;
         }
     },
     getSong: (index) => {
-        if (songs) {
-            return songs[index];
+        if (audioSongs) {
+            return audioSongs[index];
         }
     }, 
     getLength: () => {
-        return songs.length
-    }
+        return audioSongs.length
+    },
+    audioSongs
 };
 
 export { useNoise, useSongs };

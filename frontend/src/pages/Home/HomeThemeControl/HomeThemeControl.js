@@ -15,7 +15,7 @@ const cx = classNames.bind(styles);
 function HomeThemeControl() {
     const [playing, setPlaying] = useState(false);
     const dispatch = useDispatch()
-    const {currentSongId} = useSelector((state) => state.general); 
+    const {currentSongId} = useSelector((state) => state.general);  
 
     const {data : videoResponse, isSuccess: isVideoSuccess, isLoading  } = useQuery({
         queryKey: ['videoData'],
@@ -23,16 +23,20 @@ function HomeThemeControl() {
         keepPreviousData: true,
         staleTime: Infinity
     })   
+    const currentSong = useRef(new Audio())
 
     const { data: audioResponse, isSuccess: isAudioSuccess } = useQuery({
         queryKey: ["audioWithoutNoiseData"],
         queryFn: () => audioAPI.getAllAudioWithoutNoise(),
         keepPreviousData: true,
         staleTime: Infinity,
+    }, {
+        onSuccess: () => {
+            console.log("HEhe")
+            // currentSong.current.load(audioAPI.renderAudio(audioResponse.data[currentSongId].audioName))
+        }
     });     
 
-
-    const currentSong = useRef()
 
 
     const videoData = useMemo(() => { 
@@ -48,11 +52,13 @@ function HomeThemeControl() {
 
 
     const handlePlaySong = () => { 
-        setPlaying(true);
+        console.log("Playing button")
+        setPlaying(() => true);
     };
 
     const handlePauseSong = () => {
-        setPlaying(false);
+        console.log("Pausing button")
+        setPlaying(() => false);
     };
 
     const handleNextSong = () => { 
@@ -72,9 +78,24 @@ function HomeThemeControl() {
         }
     };  
 
-    useEffect(() => {  
-        playing ?  currentSong.current?.play() :  currentSong.current?.pause()
-    }, [playing, currentSongId]); 
+    useEffect(() => {
+        if (isAudioSuccess) {
+            currentSong.current.src = audioAPI.renderAudio(audioResponse.data[currentSongId].audioName)  
+            if (playing) {
+                currentSong.current.play() 
+            } 
+        } 
+    }, [currentSongId, isAudioSuccess]) 
+
+    useEffect(() => {
+        if (playing) { 
+            currentSong.current?.play()
+        } else {
+            currentSong.current?.pause()
+        }
+    }, [playing])
+
+
 
     return (
         <> 
@@ -87,13 +108,15 @@ function HomeThemeControl() {
                     <VideoComponent srcVideo={videoData['night-clear']} themeCondition="dark" rainCondition={false}/>
                     <VideoComponent srcVideo={videoData['night-rainny']} themeCondition="dark" rainCondition={true}/>
                 </>
-            }   
+            }    
+
+
 
 
             {
                 isAudioSuccess &&
                 <>  
-                    <audio loop  src={audioAPI.renderAudio(audioResponse.data[currentSongId].audioName)} ref={currentSong} />
+                    {/* <audio loop  src={audioAPI.renderAudio(audioResponse.data[currentSongId].audioName)} ref={currentSong} /> */}
                     <h1 className={cx("current-song-name__text")}>Song name: {audioResponse.data[currentSongId].caption}</h1>
                 </>
             }
