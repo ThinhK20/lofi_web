@@ -15,7 +15,7 @@ const cx = classNames.bind(styles);
 function HomeThemeControl() {
     const [playing, setPlaying] = useState(false);
     const dispatch = useDispatch()
-    const {currentSongId} = useSelector((state) => state.general);  
+    const {currentSongId, mutedAudio, audioVolume } = useSelector((state) => state.general);  
 
     const {data : videoResponse, isSuccess: isVideoSuccess, isLoading  } = useQuery({
         queryKey: ['videoData'],
@@ -30,11 +30,6 @@ function HomeThemeControl() {
         queryFn: () => audioAPI.getAllAudioWithoutNoise(),
         keepPreviousData: true,
         staleTime: Infinity,
-    }, {
-        onSuccess: () => {
-            console.log("HEhe")
-            // currentSong.current.load(audioAPI.renderAudio(audioResponse.data[currentSongId].audioName))
-        }
     });     
 
 
@@ -52,12 +47,10 @@ function HomeThemeControl() {
 
 
     const handlePlaySong = () => { 
-        console.log("Playing button")
         setPlaying(() => true);
     };
 
     const handlePauseSong = () => {
-        console.log("Pausing button")
         setPlaying(() => false);
     };
 
@@ -95,6 +88,13 @@ function HomeThemeControl() {
         }
     }, [playing])
 
+    useEffect(() => {
+        currentSong.current.muted = mutedAudio 
+    }, [mutedAudio]) 
+
+    useEffect(() => {
+        currentSong.current.volume = audioVolume
+    }, [audioVolume])
 
 
     return (

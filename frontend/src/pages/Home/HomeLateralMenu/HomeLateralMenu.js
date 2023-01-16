@@ -27,7 +27,7 @@ const cx = classNames.bind(styles);
 
 function HomeLateralMenu() {
     const { data: audioResponse, isSuccess: isAudioSuccess } = useQuery({
-        queryKey: ['audioWithouNoiseData'], 
+        queryKey: ['audioWithoutNoiseData'], 
         queryFn: () => audioAPI.getAllAudioWithoutNoise(),
         keepPreviousData: true,
         staleTime: Infinity

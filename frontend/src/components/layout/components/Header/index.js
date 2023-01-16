@@ -12,20 +12,18 @@ import Tippy from "@tippyjs/react/headless"; // different import path!
 import TippyOption from "./TippyOptions/TippyOptions";
 import { Link } from "react-router-dom";
 import imageAPI from "~/api/imageAPI";
-import { useNoise, useSongs } from "../AudioStorage";
 
 const cx = classNames.bind(styles);
 function Header() {
     const user = useSelector(state => state.user) 
     // const user = null
-    const {dateState, activeDateWidget, theme, mutedAudio, currentSongId } = useSelector((state) => state.general);
+    const {dateState, activeDateWidget, theme, mutedAudio } = useSelector((state) => state.general);
     const [visibleOptions, setVisibleOptions] = useState(false); 
 
     const dispatch = useDispatch(); 
 
 
-    const { muteVolume, pauseSong } = useSongs
-    const { muteNoise } = useNoise
+ 
 
     const handleOpenDateStatus = () => {
         dispatch(setActiveDateWidget(!activeDateWidget));
@@ -44,8 +42,6 @@ function Header() {
 
     const toggleAudio = () => {
         dispatch(setMutedAudio(!mutedAudio)) 
-        muteNoise('rain-city', !mutedAudio)
-        muteVolume(currentSongId, !mutedAudio)
     }
 
     useEffect(() => {
