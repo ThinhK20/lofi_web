@@ -23,7 +23,6 @@ function RainThemeButton() {
 
     const handleRain = () => { 
         if (!audioRef.current.src) { 
-            console.log("EHe nantadeyo")
             if (isSuccess) {
                 audioRef.current.src = audioAPI.renderAudio(data.data.find(x => x.caption === 'rain-city').audioName)
                 audioRef.current.loop = true

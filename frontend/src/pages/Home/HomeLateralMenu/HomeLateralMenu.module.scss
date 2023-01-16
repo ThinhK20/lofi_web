@@ -131,7 +131,7 @@
 }
 
 .noise-sound-box {
-    margin: 16px 0 8px 0;
+    padding: 12px 16px 8px 0;
     max-height: 220px;
     overflow: scroll;
     -ms-overflow-style: none; /* IE and Edge */
@@ -160,7 +160,7 @@
 }
 
 .noise-sound-slider {
-    flex: 1;
+    flex: 1; 
 }
 
 .footer {

@@ -15,7 +15,7 @@ import {
     faVolumeHigh,
     faVolumeMute,
 } from "@fortawesome/free-solid-svg-icons";
-import { memo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import Tippy from "@tippyjs/react/headless"; // different import path!
 import { images } from "~/assets";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,19 +27,48 @@ const cx = classNames.bind(styles);
 
 function HomeLateralMenu() {
     const { data: audioResponse, isSuccess: isAudioSuccess } = useQuery({
-        queryKey: ['audioWithoutNoiseData'], 
+        queryKey: ["audioWithoutNoiseData"],
         queryFn: () => audioAPI.getAllAudioWithoutNoise(),
         keepPreviousData: true,
-        staleTime: Infinity
-    })   
+        staleTime: Infinity,
+    });
 
+    const { data: audioNoiseResponse, isSuccess: isAudioNoiseSuccess } = useQuery({
+        queryKey: ["audioNoiseData"],
+        queryFn: () => audioAPI.getAudioFromTopic("audio-noise"),
+        keepPreviousData: true,
+        staleTime: Infinity,
+    });
 
+    const audioNoises = useMemo(() => {
+        if (isAudioNoiseSuccess) {
+            return audioNoiseResponse.data.map((noise) => {
+                return {
+                    ...noise,
+                    name: noise.caption
+                        .split("-")
+                        .map((ch) => ch.charAt(0).toUpperCase() + ch.slice(1))
+                        .join(" "),
+                    audio: new Audio(audioAPI.renderAudio(noise.audioName))
+                };
+            });
+        }
+    }, [isAudioNoiseSuccess]);
 
-    const optionsElement = useRef(); 
-    const [tippyIndexs, setTippyIndexs] = useState([false, false, false, false]); 
-    const dispatch = useDispatch() 
-    const { mutedAudio, currentSongId } = useSelector(state => state.general) 
+    const optionsElement = useRef();
+    const [tippyIndexs, setTippyIndexs] = useState([false, false, false, false]);
+    const dispatch = useDispatch();
+    const { mutedAudio, currentSongId, rainVolume, rain } = useSelector((state) => state.general); 
 
+    const handleNoise = (e, index) => {
+        const value = e.target.value / 100;
+        audioNoises[index].audio.volume = value ;
+        if (value === 0) {
+            audioNoises[index].audio.pause()
+        } else {
+            audioNoises[index].audio.play()
+        }
+    } 
 
     const handleShowMenu = (e) => {
         let eTarget = e.target;
@@ -86,11 +115,11 @@ function HomeLateralMenu() {
             }
         });
         eTarget.classList.add("active");
-    }; 
+    };
 
     const handleSelectedSong = (index) => {
-        dispatch(setCurrentSongId(index))
-    }
+        dispatch(setCurrentSongId(index));
+    };
 
     return (
         <div className={cx("wrapper")}>
@@ -124,18 +153,25 @@ function HomeLateralMenu() {
                                     </div>
                                 </div>
                                 <div className={cx("mood-main-audio")}>
-                                    {mutedAudio ? 
-                                    <FontAwesomeIcon onClick={() => dispatch(setMutedAudio(false))} className={cx("mood-main-audio-icon")} icon={faVolumeMute} />
-                                    :
-                                    <FontAwesomeIcon onClick={() => dispatch(setMutedAudio(true))} className={cx("mood-main-audio-icon")} icon={faVolumeHigh} />
-                                    
-                                    }
+                                    {mutedAudio ? (
+                                        <FontAwesomeIcon
+                                            onClick={() => dispatch(setMutedAudio(false))}
+                                            className={cx("mood-main-audio-icon")}
+                                            icon={faVolumeMute}
+                                        />
+                                    ) : (
+                                        <FontAwesomeIcon
+                                            onClick={() => dispatch(setMutedAudio(true))}
+                                            className={cx("mood-main-audio-icon")}
+                                            icon={faVolumeHigh}
+                                        />
+                                    )}
                                     <Slider
                                         className={cx("mood-main-audio-slider")}
-                                        valueLabelDisplay="auto"  
+                                        valueLabelDisplay="auto"
                                         onChange={(e) => {
-                                            dispatch(setVolume(e.target.value / 100)) 
-                                        } }
+                                            dispatch(setVolume(e.target.value / 100));
+                                        }}
                                         min={0}
                                         max={100}
                                         defaultValue={100}
@@ -145,136 +181,22 @@ function HomeLateralMenu() {
                                     <h3 className={cx("tippy-title-text")}>Sounds</h3>
                                 </div>
                                 <div className={cx("noise-sound-box")}>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>Keyboard</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>Summer Storm</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>Ocean</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>Campfire</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>Forest</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>Forest Rain</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>Waves</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>Fan</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>City Traffic</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>City Rain</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>River</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>People Talking</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
-                                    <div className={cx("noise-sound-item")}>
-                                        <span className={cx("noise-sound-name")}>Wind</span>
-                                        <Slider
-                                            valueLabelDisplay="auto"
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            className={cx("noise-sound-slider")}
-                                        />
-                                    </div>
+                                    {isAudioNoiseSuccess &&
+                                        audioNoises.map((noise, index) => {
+                                            return (
+                                                <div className={cx("noise-sound-item")}>
+                                                    <span className={cx("noise-sound-name")}>{noise.name}</span>
+                                                    <Slider
+                                                        valueLabelDisplay="auto"
+                                                        min={0}
+                                                        max={100}
+                                                        defaultValue={0} 
+                                                        onChange={(e) => handleNoise(e, index)}
+                                                        className={cx("noise-sound-slider")}
+                                                    />
+                                                </div>
+                                            );
+                                        })}
                                 </div>
                             </div>
                             <div className={cx("footer")}>
@@ -315,29 +237,45 @@ function HomeLateralMenu() {
                                         alt="templates-panel"
                                     />
                                 </div>
-                                <div className={cx("tippy-title", "tippy-item")} style={{padding: "10px 0"}} >
+                                <div className={cx("tippy-title", "tippy-item")} style={{ padding: "10px 0" }}>
                                     <h3 className={cx("tippy-title-text")}>
                                         Songs
-                                        <div className={cx('hidden-scroll')}  style={{height: "250px"}}>
-                                            {isAudioSuccess && audioResponse.data.map((obj, index)  => {  
-
-                                                if (index === currentSongId) {
-                                                    return ( 
-                                                        <div key={index}  className={cx('tippy-song-card', 'active')}>
-                                                            <h1 className={cx('tippy-song-title')} >{obj.caption}</h1>  
-                                                            <FontAwesomeIcon className={cx('tippy-song-play-icon')} icon={faCirclePlay} />
-                                                        </div>
-                                                    )
-                                                } else {
-                                                    return ( 
-                                                        <div key={index}  className={cx('tippy-song-card')} onClick={() => handleSelectedSong(index)}>
-                                                            <h1 className={cx('tippy-song-title')} >{obj.caption}</h1>  
-                                                            <FontAwesomeIcon className={cx('tippy-song-play-icon')} icon={faCirclePlay} />
-                                                        </div>
-                                                    )
-                                                }
-                                            })}
-
+                                        <div className={cx("hidden-scroll")} style={{ height: "250px" }}>
+                                            {isAudioSuccess &&
+                                                audioResponse.data.map((obj, index) => {
+                                                    if (index === currentSongId) {
+                                                        return (
+                                                            <div
+                                                                key={index}
+                                                                className={cx("tippy-song-card", "active")}
+                                                            >
+                                                                <h1 className={cx("tippy-song-title")}>
+                                                                    {obj.caption}
+                                                                </h1>
+                                                                <FontAwesomeIcon
+                                                                    className={cx("tippy-song-play-icon")}
+                                                                    icon={faCirclePlay}
+                                                                />
+                                                            </div>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <div
+                                                                key={index}
+                                                                className={cx("tippy-song-card")}
+                                                                onClick={() => handleSelectedSong(index)}
+                                                            >
+                                                                <h1 className={cx("tippy-song-title")}>
+                                                                    {obj.caption}
+                                                                </h1>
+                                                                <FontAwesomeIcon
+                                                                    className={cx("tippy-song-play-icon")}
+                                                                    icon={faCirclePlay}
+                                                                />
+                                                            </div>
+                                                        );
+                                                    }
+                                                })}
                                         </div>
                                     </h3>
                                 </div>
