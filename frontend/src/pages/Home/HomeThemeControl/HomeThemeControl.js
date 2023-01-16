@@ -82,9 +82,9 @@ function HomeThemeControl() {
 
     useEffect(() => {
         if (playing) { 
-            currentSong.current?.play()
+            currentSong.current.play()
         } else {
-            currentSong.current?.pause()
+            currentSong.current.pause()
         }
     }, [playing])
 

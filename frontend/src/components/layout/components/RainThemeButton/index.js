@@ -22,18 +22,11 @@ function RainThemeButton() {
         staleTime: Infinity
     })  
 
-    const audioNoiseData = useMemo(() => {
-        return data?.data.reduce((prev, curr) => {
-            return {...prev, [curr.caption]: audioAPI.renderAudio(curr.audioName)}
-        }, {}) 
-    }, [isSuccess])
-
-    
-
     const handleRain = () => { 
-        if (!audioRef.current.src) {
+        if (!audioRef.current.src) { 
+            console.log("EHe nantadeyo")
             if (isSuccess) {
-                audioRef.current.src = audioNoiseData['rain-city']
+                audioRef.current.src = audioAPI.renderAudio(data.data.find(x => x.caption === 'rain-city').audioName)
                 audioRef.current.loop = true
             }
         }
