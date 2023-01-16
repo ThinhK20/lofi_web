@@ -1,13 +1,10 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import {  images } from "~/assets";
 import classNames from "classnames/bind";
 
 import styles from "./HomeThemeControl.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import videoAPI from "~/api/videoAPI";
-import VideoComponent from "~/components/layout/components/VideoComponent";
-import Loading from "~/pages/Loading";
 import audioAPI from "~/api/audioAPI";
 import { setCurrentSongId } from "~/components/Redux/generalSlice";
 const cx = classNames.bind(styles);
@@ -17,12 +14,7 @@ function HomeThemeControl() {
     const dispatch = useDispatch()
     const {currentSongId, mutedAudio, audioVolume } = useSelector((state) => state.general);  
 
-    const {data : videoResponse, isSuccess: isVideoSuccess, isLoading  } = useQuery({
-        queryKey: ['videoData'],
-        queryFn: () => videoAPI.getVideosFromTopic('chill-vibes'),
-        keepPreviousData: true,
-        staleTime: Infinity
-    })   
+ 
     const currentSong = useRef(new Audio())
 
     const { data: audioResponse, isSuccess: isAudioSuccess } = useQuery({
@@ -31,20 +23,6 @@ function HomeThemeControl() {
         keepPreviousData: true,
         staleTime: Infinity,
     });     
-
-
-
-    const videoData = useMemo(() => { 
-        if (isVideoSuccess) { 
-            return videoResponse.data.reduce((prev, curr) => {
-                return {...prev, [curr.caption]: videoAPI.getVideo(curr.videoName)}
-            }, {}) 
-        } 
-        return {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isVideoSuccess])  
-
-
 
     const handlePlaySong = () => { 
         setPlaying(() => true);
@@ -74,6 +52,7 @@ function HomeThemeControl() {
     useEffect(() => {
         if (isAudioSuccess) {
             currentSong.current.src = audioAPI.renderAudio(audioResponse.data[currentSongId].audioName)  
+            if (!currentSong.current.loop) currentSong.current.loop = true
             if (playing) {
                 currentSong.current.play() 
             } 
@@ -99,24 +78,9 @@ function HomeThemeControl() {
 
     return (
         <> 
-            {isLoading && <Loading/>}
-            {isVideoSuccess 
-                && 
-                <>
-                    <VideoComponent srcVideo={videoData['day-sunny']} themeCondition="light" rainCondition={false}/>
-                    <VideoComponent srcVideo={videoData['day-rainny']} themeCondition="light" rainCondition={true}/>
-                    <VideoComponent srcVideo={videoData['night-clear']} themeCondition="dark" rainCondition={false}/>
-                    <VideoComponent srcVideo={videoData['night-rainny']} themeCondition="dark" rainCondition={true}/>
-                </>
-            }    
-
-
-
-
             {
                 isAudioSuccess &&
                 <>  
-                    {/* <audio loop  src={audioAPI.renderAudio(audioResponse.data[currentSongId].audioName)} ref={currentSong} /> */}
                     <h1 className={cx("current-song-name__text")}>Song name: {audioResponse.data[currentSongId].caption}</h1>
                 </>
             }

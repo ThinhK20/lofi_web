@@ -2,7 +2,6 @@ import { faCloudRain } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import classNames from "classnames/bind";
-import { useMemo } from "react";
 import { memo, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import audioAPI from "~/api/audioAPI";
