@@ -6,7 +6,6 @@ const initialValue = {
     theme: 'light',
     rain: false,
     audioVolume: 1,
-    rainVolume: 0.4,
     mutedAudio: false,
     currentSongId: 0
 }

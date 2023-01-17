@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styles from "./HomeLateralMenu.module.scss";
 import classNames from "classnames/bind";
 import { Slider } from "@mui/material";
@@ -49,7 +50,11 @@ function HomeLateralMenu() {
                         .split("-")
                         .map((ch) => ch.charAt(0).toUpperCase() + ch.slice(1))
                         .join(" "),
-                    audio: new Audio(audioAPI.renderAudio(noise.audioName))
+                    audio: (() => {
+                        const newAudio = new Audio(audioAPI.renderAudio(noise.audioName))
+                        newAudio.loop = true
+                        return newAudio 
+                    })()
                 };
             });
         }
@@ -58,7 +63,7 @@ function HomeLateralMenu() {
     const optionsElement = useRef();
     const [tippyIndexs, setTippyIndexs] = useState([false, false, false, false]);
     const dispatch = useDispatch();
-    const { mutedAudio, currentSongId, rainVolume, rain } = useSelector((state) => state.general); 
+    const { mutedAudio, currentSongId, rain } = useSelector((state) => state.general); 
 
     const handleNoise = (e, index) => {
         const value = e.target.value / 100;
@@ -120,6 +125,24 @@ function HomeLateralMenu() {
     const handleSelectedSong = (index) => {
         dispatch(setCurrentSongId(index));
     };
+
+    useEffect(() => {
+        if (isAudioNoiseSuccess) {
+            const rainNoise = audioNoises.find(x => x.caption === 'rain-city').audio
+            if (rain) {
+                rainNoise.volume = 1
+                rainNoise.play()
+            } else {
+                rainNoise.pause()
+            }
+        }
+    }, [rain]) 
+
+    useEffect(() => {
+        audioNoises.forEach((noise) => {
+            noise.audio.muted = mutedAudio
+        })
+    }, [mutedAudio])
 
     return (
         <div className={cx("wrapper")}>
@@ -186,14 +209,43 @@ function HomeLateralMenu() {
                                             return (
                                                 <div className={cx("noise-sound-item")}>
                                                     <span className={cx("noise-sound-name")}>{noise.name}</span>
-                                                    <Slider
-                                                        valueLabelDisplay="auto"
-                                                        min={0}
-                                                        max={100}
-                                                        defaultValue={0} 
-                                                        onChange={(e) => handleNoise(e, index)}
-                                                        className={cx("noise-sound-slider")}
-                                                    />
+                                                    {noise.caption === 'rain-city' ? 
+                                                            <> 
+                                                                {rain ? 
+                                                                    <Slider
+                                                                    valueLabelDisplay="auto"
+                                                                    min={0}
+                                                                    max={100}
+                                                                    defaultValue={100} 
+                                                                    onChange={(e) => handleNoise(e, index)}
+                                                                    className={cx("noise-sound-slider")}
+                                                                    />
+                                                                :  
+                                                                <>
+                                                                    <span>{rain}</span>
+                                                                    <Slider
+                                                                        valueLabelDisplay="auto"
+                                                                        min={0}
+                                                                        max={100}
+                                                                        defaultValue={0} 
+                                                                        onChange={(e) => handleNoise(e, index)}
+                                                                        className={cx("noise-sound-slider")}
+                                                                        />
+                                                                
+                                                                </>
+                                                                }
+                                                            </>
+                                                        :
+
+                                                        <Slider
+                                                            valueLabelDisplay="auto"
+                                                            min={0}
+                                                            max={100}
+                                                            defaultValue={0} 
+                                                            onChange={(e) => handleNoise(e, index)}
+                                                            className={cx("noise-sound-slider")}
+                                                        />
+                                                    }
                                                 </div>
                                             );
                                         })}

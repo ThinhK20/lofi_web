@@ -11,41 +11,12 @@ import styles from "./RainThemeButton.module.scss";
 const cx = classNames.bind(styles);
 function RainThemeButton() {
     const dispatch = useDispatch();
-    const {rain, mutedAudio, rainVolume} = useSelector((state) => state.general);
-    const audioRef = useRef(new Audio())
-
-    const { data, isSuccess  } = useQuery({
-        queryKey: ['audioNoiseData'],
-        queryFn: () => audioAPI.getAudioFromTopic('audio-noise'),
-        keepPreviousData: true,
-        staleTime: Infinity
-    })  
+    const {rain} = useSelector((state) => state.general);
 
     const handleRain = () => { 
-        if (!audioRef.current.src) { 
-            if (isSuccess) {
-                audioRef.current.src = audioAPI.renderAudio(data.data.find(x => x.caption === 'rain-city').audioName)
-                audioRef.current.loop = true
-            }
-        }
         dispatch(setRain(!rain));
-        if (isSuccess) {
-            if (rain) {
-                audioRef.current.pause()
-            } else {
-                audioRef.current.play()
-            }
-        }  
     };
-    
-    useEffect(() => {
-        audioRef.current.muted = mutedAudio
-    }, [mutedAudio]) 
 
-    useEffect(() => {
-        audioRef.current.volume = rainVolume
-    }, [rainVolume])
-    
     
     return <FontAwesomeIcon icon={faCloudRain} className={cx("wrapper")} onClick={handleRain} />;
 }
