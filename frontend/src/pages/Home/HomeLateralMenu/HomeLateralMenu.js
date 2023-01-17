@@ -138,10 +138,12 @@ function HomeLateralMenu() {
         }
     }, [rain]) 
 
-    useEffect(() => {
-        audioNoises.forEach((noise) => {
-            noise.audio.muted = mutedAudio
-        })
+    useEffect(() => { 
+        if (isAudioNoiseSuccess) {
+            audioNoises.forEach((noise) => {
+                noise.audio.muted = mutedAudio
+            })
+        }
     }, [mutedAudio])
 
     return (
