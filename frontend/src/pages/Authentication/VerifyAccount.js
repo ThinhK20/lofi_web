@@ -7,6 +7,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import authAPI from "~/api/authAPI";
 import { useDispatch } from "react-redux";
 import { setUserData } from "~/components/Redux/userSlice";
+import { toast } from "react-toastify";
 
 
 const cx = classNames.bind(styles);
@@ -21,9 +22,8 @@ function VerifyAccount() {
     const handleSubmit = async(e) => {
         e.preventDefault();  
         const formData = new FormData(e.target)  
-        console.log("SUBMIT...") 
         console.log(state.verifyCode, formData.get('verifyCode'))
-        if (state.verifyCode === (formData.get('verifyCode') - '0')) {
+        if (state.verifyCode === (formData.get('verifyCode').trim() - '0')) {
             console.log("Code is valid")
             authAPI.verifyUser(state.userData.user.email)
                 .then(() => {
@@ -31,6 +31,15 @@ function VerifyAccount() {
                     dispatch(setUserData(state.userData))  
                     navigate('/')
                 })
+                .catch(() => {
+                    toast('There is something wrong, please check again !', {
+                        theme: 'dark'
+                    })
+                })
+        } else {
+            toast('Code is unvalid, please check again !', {
+                theme: 'dark'
+            })
         }
         
     } 

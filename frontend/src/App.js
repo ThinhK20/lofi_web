@@ -1,5 +1,9 @@
 import { Fragment, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { publicRoutes } from "./routes";
 import { DefaultLayout } from "~/components/layout";
 import NotFound from "./pages/Error/NotFound"; 
@@ -9,7 +13,7 @@ import Loading from "./pages/Loading";
 function App() {
     return (  
         <Suspense fallback={<Loading/>}>
-
+            <ToastContainer />
             <Router>
                 <div className="App">
                     <Routes>  

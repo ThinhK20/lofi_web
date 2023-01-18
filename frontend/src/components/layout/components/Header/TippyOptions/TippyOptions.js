@@ -8,13 +8,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames/bind";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "~/components/Redux/userSlice";
 import styles from "./TippyOptions.module.scss";
 
 const cx = classNames.bind(styles);
 
 function TippyOption() { 
+    const user = useSelector(state => state.user) 
     const dispatch = useDispatch()
     const handleLogout = () => {
         dispatch(setUserData(null))
@@ -46,11 +47,13 @@ function TippyOption() {
             <a href="/" className={cx("item")}>
                 <FontAwesomeIcon icon={faExclamationCircle} className={cx("icon")} />
                 <h4 className={cx("name")}>About us</h4>
-            </a>
-            <a href="/" onClick={handleLogout}  className={cx("item")} >
-                <FontAwesomeIcon icon={faRightToBracket} className={cx("icon")} />
-                <h4 className={cx("name")}>Log out</h4>
-            </a>
+            </a> 
+            {user && 
+                <a href="/" onClick={handleLogout}  className={cx("item")} >
+                    <FontAwesomeIcon icon={faRightToBracket} className={cx("icon")} />
+                    <h4 className={cx("name")}>Log out</h4>
+                </a>
+            }
         </div>
     );
 }

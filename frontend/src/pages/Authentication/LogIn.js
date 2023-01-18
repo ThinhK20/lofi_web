@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import authAPI from "~/api/authAPI";
 import { useDispatch } from "react-redux";
 import { setUserData } from "~/components/Redux/userSlice";
-import emailAPI from "~/api/emailAPI";
+import emailAPI from "~/api/emailAPI";  
 
 const cx = classNames.bind(styles);
 
@@ -53,7 +53,7 @@ function Login() {
 
                   
                 } else {
-                    dispatch(setUserData(data.data))  
+                    dispatch(setUserData(data.data))   
                     navigate('/')
                 }
             }
