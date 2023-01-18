@@ -3,6 +3,6 @@ const emailController = require('../controllers/emailController')
 
 const router = express.Router()
 
-router.get('/validate', emailController.validateEmail)
+router.post('/verify', emailController.verifyAccount)
 
 module.exports = router

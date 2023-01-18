@@ -209,7 +209,7 @@ function HomeLateralMenu() {
                                     {isAudioNoiseSuccess &&
                                         audioNoises.map((noise, index) => {
                                             return (
-                                                <div className={cx("noise-sound-item")}>
+                                                <div className={cx("noise-sound-item")} key={index}>
                                                     <span className={cx("noise-sound-name")}>{noise.name}</span>
                                                     {noise.caption === 'rain-city' ? 
                                                             <> 

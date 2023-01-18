@@ -5,10 +5,10 @@ const emailTemplate = require('../utils/emailTemplate')
 sgMail.setApiKey(process.env.SENGRID_API_KEY)
 
 const emailController = {
-    validateEmail: async(_, res) => {
+    verifyAccount: async(req, res) => {
         try {   
             const randomID = Math.floor(Math.random() * 899999 + 100000) 
-            await sgMail.send(emailTemplate.validateEmail(randomID))
+            await sgMail.send(emailTemplate.verifyEmail(randomID, req.body.email))
             return res.status(200).json({
                 message: "Send email successfully !",
                 data: randomID

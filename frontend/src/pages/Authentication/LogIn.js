@@ -23,14 +23,20 @@ function Login() {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target); 
-        console.log("Data: ", formData.get('username'))
         mutate({ 
             username: formData.get('username'), 
             password: formData.get('password')
         }, {
             onSuccess: (data) => {
-                dispatch(setUserData(data.data)) 
-                navigate('/')
+                console.log("Data: ", data.data)
+                if (!data.data.user.verified) {
+                    navigate('/verifyAccount', {
+                        state: data.data
+                    })
+                } else {
+                    dispatch(setUserData(data.data))  
+                    navigate('/')
+                }
             }
         })
     }
@@ -74,7 +80,7 @@ function Login() {
                     </h4>
                     <div className={cx("signup-btn-box")}>
                         <button type="submit" className={cx("signup-btn")}>
-                            Sign Up
+                            Log In
                         </button>
                     </div>
                 </form>

@@ -52,6 +52,7 @@ const authController = {
     login: async(req, res) => {
         try {
              const user = await User.findOne({username: req.body.username})
+             console.log("User: ", user)
              if (!user) {
                  return res.status(500).json("Bad request!")
             }
@@ -59,11 +60,6 @@ const authController = {
             if (!passwordEncode) {
                 return res.status(500).json("Password is not correct !")
             } 
-            if (!user.validate) {
-                return res.status(403).json({
-                    message: "Your email is not validate !"
-                })
-            }
             const accessToken = authController.generateAccessToken(user) 
             const {password, _id, admin, ...userDTO} = user._doc
             return res.status(200).json({
@@ -86,15 +82,15 @@ const authController = {
             return res.status(500).json(err)
         }
     }, 
-    validateUser: async(req, res) => {
+    verifyUser: async(req, res) => {
         try {
             const user = await User.findById(req.params.id) 
             if (!user) {
                 return res.status(500).json("User is not exist !")
             } 
-            user.validate = true 
+            user.verified = true
             await user.save()
-            return res.status(200).json("Validated successfully !")
+            return res.status(200).json("Verified successfully !")
         } catch(err) {
             return res.status(500).json(err)
         }
