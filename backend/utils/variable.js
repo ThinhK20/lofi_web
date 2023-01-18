@@ -1,5 +1,7 @@
+const dotenv = require('dotenv')
+dotenv.config()
 const variableApp = {
-    mongooseUrl: 'mongodb+srv://admin:admin@lofi-chill.nglreix.mongodb.net/Lofi-chill?retryWrites=true&w=majority'
+    mongooseUrl: process.env.MONGOOSE_URL
 }
 
 module.exports = variableApp

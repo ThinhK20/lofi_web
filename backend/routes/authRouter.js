@@ -4,9 +4,9 @@ const uploadMulter = require("../utils")
 
 const router = require("express").Router()
 
-router.post("/register", uploadMulter.single('avatar') ,authController.register)
+router.post("/register", uploadMulter.single('avatar'), authController.register)
 router.post("/login", authController.login)
 router.delete("/delete/:id", middlewareController.verifyToken, authController.delete)
-router.get("/", authController.test)
+router.post("/validate/:id", authController.validateUser)
 
 module.exports = router

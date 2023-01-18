@@ -7,6 +7,7 @@ const mongoose = require("mongoose")
 const imageRouter = require('./routes/imageRouter') 
 const videoRouter = require('./routes/videoRouter')
 const audioRouter = require('./routes/audioRouter')  
+const emailRouter = require('./routes/emailRouter')
 const morgan = require('morgan')
 
 dotenv.config()
@@ -24,12 +25,15 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
 
-
 app.use("/v1/auth", authRouter) 
 app.use("/v1/image", imageRouter)
 app.use("/v1/video", videoRouter)
 app.use("/v1/audio", audioRouter)
+app.use("/v1/email", emailRouter)
 
+app.use((_, res) => {
+    res.status(404).json("404 Not Found")
+})
 
 
 app.listen(8000, () => {

@@ -28,6 +28,10 @@ const UserScheme = new mongoose.Schema({
     lofiUsername: {
         type: String,
         require: true
+    },
+    validated: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true
