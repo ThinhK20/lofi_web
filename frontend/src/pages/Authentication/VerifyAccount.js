@@ -3,17 +3,36 @@ import classNames from "classnames/bind";
 import { images } from "~/assets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import authAPI from "~/api/authAPI";
+import { useDispatch } from "react-redux";
+import { setUserData } from "~/components/Redux/userSlice";
 
 
 const cx = classNames.bind(styles);
 
-function VerifyAccount(props) {  
-    const { state } = useLocation()
-    console.log(state)
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Submit...")
+function VerifyAccount() {  
+    const { state } = useLocation()  
+    console.log("State: ", state) 
+    const dispatch = useDispatch()
+
+    const navigate = useNavigate()
+
+    const handleSubmit = async(e) => {
+        e.preventDefault();  
+        const formData = new FormData(e.target)  
+        console.log("SUBMIT...") 
+        console.log(state.verifyCode, formData.get('verifyCode'))
+        if (state.verifyCode === (formData.get('verifyCode') - '0')) {
+            console.log("Code is valid")
+            authAPI.verifyUser(state.userData.user.email)
+                .then(() => {
+                    console.log("Successfully !!!") 
+                    dispatch(setUserData(state.userData))  
+                    navigate('/')
+                })
+        }
+        
     } 
 
     const handleSendAgain = () => {

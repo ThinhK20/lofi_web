@@ -8,12 +8,17 @@ import { useMutation } from "@tanstack/react-query";
 import authAPI from "~/api/authAPI";
 import { useDispatch } from "react-redux";
 import { setUserData } from "~/components/Redux/userSlice";
+import emailAPI from "~/api/emailAPI";
 
 const cx = classNames.bind(styles);
 
 function Login() { 
     const { mutate } = useMutation({
         mutationFn: authAPI.loginUser
+    })  
+
+    const { mutate : mutateSendVerifyEmail } = useMutation({
+        mutationFn: emailAPI.verifyAccount
     }) 
 
     const navigate = useNavigate()
@@ -30,9 +35,23 @@ function Login() {
             onSuccess: (data) => {
                 console.log("Data: ", data.data)
                 if (!data.data.user.verified) {
-                    navigate('/verifyAccount', {
-                        state: data.data
+                    mutateSendVerifyEmail({
+                        email: data.data.user.email
+                    }, {
+                        onSuccess: (res) => {
+                            console.log("Res: ", res.data) 
+                            navigate('/verifyAccount', {
+                                state: {
+                                    userData: data.data,
+                                    verifyCode: res.data.data
+                                }
+                            })
+                           
+                        }   
                     })
+
+
+                  
                 } else {
                     dispatch(setUserData(data.data))  
                     navigate('/')

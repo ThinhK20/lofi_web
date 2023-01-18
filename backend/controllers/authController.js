@@ -84,7 +84,7 @@ const authController = {
     }, 
     verifyUser: async(req, res) => {
         try {
-            const user = await User.findById(req.params.id) 
+            const user = await User.findOne({email: req.params.email}) 
             if (!user) {
                 return res.status(500).json("User is not exist !")
             } 
