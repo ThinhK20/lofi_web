@@ -19,7 +19,7 @@ passport.use(new GoogleStrategies({
             }
             const newUser = await new User({
                 username: profile._json.email,
-                password: profile._json.sub,
+                password: profile.id,
                 email: profile._json.email,
                 avatar: profile._json.picture,
                 lofiUsername: profile._json.name,
