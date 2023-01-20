@@ -15,7 +15,7 @@ function Profile() {
             <div className={cx("inner")}>
                 <div className={cx("heading-inner")}>
                     <div className={cx("heading-avatar-box")}>
-                        <img src={imageAPI.getImage(user.user.avatar)} alt="avatar" className={cx("heading-avatar")} />
+                        <img src={!user.user.service ? imageAPI.getImage(user.user.avatar) : user.user.avatar} alt="avatar" className={cx("heading-avatar")} />
                         <h1 className={cx("heading-name")}>{user.user.lofiUsername}</h1>
                     </div>
                     <button className={cx("btn")}>Edit profile</button>

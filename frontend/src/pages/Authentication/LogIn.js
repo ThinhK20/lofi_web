@@ -9,10 +9,12 @@ import authAPI from "~/api/authAPI";
 import { useDispatch } from "react-redux";
 import { setUserData } from "~/components/Redux/userSlice";
 import emailAPI from "~/api/emailAPI";  
+import GoogleAuthentication from "~/components/layout/components/GoogleAuthentication/GoogleAuthentication";
 
 const cx = classNames.bind(styles);
 
-function Login() { 
+function Login() {   
+
     const { mutate } = useMutation({
         mutationFn: authAPI.loginUser
     })  
@@ -109,7 +111,8 @@ function Login() {
                         Sign up for free
                     </Link>
                 </footer>
-            </div>
+            </div> 
+            <GoogleAuthentication/>
             <Link to={"/"} className={cx("back-menu")}>
                 <FontAwesomeIcon icon={faChevronLeft} className={cx("back-icon")} />
                 <h3 className={cx("back-content")}>Back to Home</h3>

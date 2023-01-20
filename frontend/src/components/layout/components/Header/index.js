@@ -22,9 +22,6 @@ function Header() {
 
     const dispatch = useDispatch(); 
 
-
- 
-
     const handleOpenDateStatus = () => {
         dispatch(setActiveDateWidget(!activeDateWidget));
     }; 
@@ -70,7 +67,7 @@ function Header() {
                 </button>
                 {user ? (
                     <Link to="profile" href="." className={cx("user-wrapper")}>
-                        <img className={cx("user-avatar")} src={imageAPI.getImage(user.user.avatar)} alt="user-avatar" />
+                        <img className={cx("user-avatar")} src={!user.user.service ? imageAPI.getImage(user.user.avatar) : user.user.avatar} alt="user-avatar" />
                     </Link>
                 ) : (
                     <>

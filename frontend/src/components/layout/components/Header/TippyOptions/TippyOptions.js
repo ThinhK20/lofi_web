@@ -49,7 +49,7 @@ function TippyOption() {
                 <h4 className={cx("name")}>About us</h4>
             </a> 
             {user && 
-                <a href="/" onClick={handleLogout}  className={cx("item")} >
+                <a href="/login" onClick={handleLogout}  className={cx("item")} >
                     <FontAwesomeIcon icon={faRightToBracket} className={cx("icon")} />
                     <h4 className={cx("name")}>Log out</h4>
                 </a>
