@@ -27,14 +27,22 @@ const authController = {
                 avatar: req.file.filename,
                 lofiUsername: req.body.lofiUsername
             })  
+            console.log("Passing here: ", newUser)
+
             const newImage = await new Image({
                 caption: "user-avatar__" + req.body.username,
                 imageName: req.file.filename,
                 imageId: req.file.id,
              });
+            console.log("Step 1")
+
             await newUser.save();
+            console.log("Step 2")
             await newImage.save();
+            console.log("Step 3")
             const { password, ...userDTO }  = newUser._doc
+            console.log("Step 4")
+
             return res.status(200).json({
                 message: "Register successfully !",
                 user: {...userDTO}

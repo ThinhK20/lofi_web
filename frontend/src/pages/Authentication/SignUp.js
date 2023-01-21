@@ -2,9 +2,9 @@ import styles from "./Authentication.module.scss";
 import classNames from "classnames/bind";
 import { images } from "~/assets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faL } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import {  useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import authAPI from "~/api/authAPI";
 import { toast } from "react-toastify";
@@ -90,10 +90,17 @@ function SignUp() {
                     })
                 },
                 onError: (err) => { 
-                    toast(`Register failed: ${err.response.data.message}`, {
-                        theme: "dark",
-                        type: "error"
-                    })
+                    if (err.response.data.message) {
+                        toast(`Register failed: ${err.response.data.message}`, {
+                            theme: "dark",
+                            type: "error"
+                        })
+                    } else {
+                        toast(`Register failed ! Please try again.`, {
+                            theme: "dark",
+                            type: "error"
+                        })
+                    }
                 }
             })
         }

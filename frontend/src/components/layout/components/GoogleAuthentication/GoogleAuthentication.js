@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { setUserData } from "~/components/Redux/userSlice"
-import { GOOGLE_CLIENT_ID } from "~/secret"
+import { DEFAULT_PROFILE_WALLPAPER, GOOGLE_CLIENT_ID } from "~/secret"
 
 
 const GoogleAuthentication = () => {  
@@ -22,7 +22,7 @@ const GoogleAuthentication = () => {
                 verified: true,
                 service: true,
                 profile: {
-                    wallpaper: "c5630f2b69d4c3d762d3aab8716f68e1.jpg"
+                    wallpaper: DEFAULT_PROFILE_WALLPAPER
                 }
             }
         })) 
