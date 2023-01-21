@@ -68,7 +68,7 @@ function Login() {
             <img className={cx("logo")} src={images.logo} alt="logo" />
             <div className={cx("content")}>
                 <div className={cx("heading")}>
-                    <h1 className={cx("heading-welcome")}>Welcome back!</h1>
+                    <h1 className={cx("heading-welcome")}>Welcome !</h1>
                     <h2 className={cx("heading-content")}>Log In to your account.</h2>
                 </div>
                 <form className={cx("form")} onSubmit={handleSubmit}>
@@ -97,7 +97,7 @@ function Login() {
                         </div>
                     </div>
                     <h4 className={cx("policy-text")}>
-                        <a href=".">Forgot password ?</a>
+                        <a href="/forgot-password">Forgot password ?</a>
                     </h4>
                     <div className={cx("signup-btn-box")}>
                         <button type="submit" className={cx("signup-btn")}>
@@ -106,7 +106,7 @@ function Login() {
                     </div>
                 </form>
                 <footer className={cx("footer")}>
-                    <span className={cx("footer-text")}>Don't have an account ? </span>
+                    <span className={cx("footer-text")}>Don't have any account ? </span>
                     <Link to={"/signup"} href="." className={cx("login")}>
                         Sign up for free
                     </Link>

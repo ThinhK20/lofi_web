@@ -17,9 +17,7 @@ connect.once("open", () => {
 
 const imageController = {
    upload: async (req, res) => {
-      console.log(req.body);
       try { 
-        console.log("FILES: ", req.file)
          const image = await Image.findOne({ caption: req.body.caption });
          if (image) return res.status(200).json("Image already exists !");  
 

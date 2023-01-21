@@ -1,17 +1,16 @@
 import classNames from "classnames/bind";
 import { useSelector } from "react-redux";
 import imageAPI from "~/api/imageAPI";
-import { images } from "~/assets";
 import styles from "./Profile.module.scss";
 
 const cx = classNames.bind(styles);
 function Profile() {
     const user = useSelector(state => state.user)
-    const theme = useSelector(state => state.general).theme; 
+    const theme = useSelector(state => state.general).theme;  
 
     return (
         <div className={cx("wrapper", theme === 'light' && "dark")}>
-            <img alt="wallpaper" className={cx("wallpaper")} src={images.test_wallpaper} />
+            <img alt="wallpaper" className={cx("wallpaper")} src={imageAPI.getImage(user.user.profile.wallpaper)} />
             <div className={cx("inner")}>
                 <div className={cx("heading-inner")}>
                     <div className={cx("heading-avatar-box")}>

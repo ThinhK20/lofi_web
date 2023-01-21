@@ -144,7 +144,18 @@ function HomeLateralMenu() {
                 noise.audio.muted = mutedAudio
             })
         }
-    }, [mutedAudio])
+    }, [mutedAudio]) 
+
+
+    useEffect(() => {
+        return () => { 
+            if (isAudioNoiseSuccess) {
+                audioNoises.forEach((noise) => {
+                    noise.audio.pause()
+                })
+            }
+        }
+    }, [])
 
     return (
         <div className={cx("wrapper")}>

@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken")
 const Image = require("../models/Image")
 
 const authController = {
-    register: async(req, res) => { 
+    register: async(req, res) => {  
+        console.log(req.body)
+        console.log("File: ", req.file)
         try { 
             if (req.file.contentType != 'image/jpeg' && req.file.contentType != 'image/png' && req.file.contentType != 'image/svg+xml') {
                 return res.status(403).json({
@@ -16,7 +18,8 @@ const authController = {
             const user = await User.findOne({ username: req.body.username }) 
             if (user) return res.status(403).json({ 
                 message: "Username already exists !"
-            })
+            }) 
+            console.log("Running here...")
             const newUser = await new User({
                 username: req.body.username,
                 password: hashed,
@@ -52,7 +55,6 @@ const authController = {
     login: async(req, res) => {
         try {
              const user = await User.findOne({username: req.body.username})
-             console.log("User: ", user)
              if (!user) {
                  return res.status(500).json("Bad request!")
             }

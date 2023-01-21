@@ -2,12 +2,104 @@ import styles from "./Authentication.module.scss";
 import classNames from "classnames/bind";
 import { images } from "~/assets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faL } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import authAPI from "~/api/authAPI";
+import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 
-function SignUp() {
+function SignUp() { 
+    const { mutate } = useMutation({
+        mutationFn: authAPI.registerUser
+    })
+
+
+    const [formData, setFormData] = useState({
+        username: "",
+        email: "",
+        password: "",
+        lofiUsername: "",
+        avatar: "",
+    }) 
+
+    const [checked, setChecked] = useState(false) 
+
+    const [errorMessage, setErrorMessage] = useState({
+        username: "",
+        email: "",
+        password: "",
+        lofiUsername: "",
+        avatar: "",
+    }) 
+    const previewAvatar = useRef()
+
+    const handleChange = (name) => (event) => { 
+        if (name === 'avatar') { 
+            if (event.target.files && event.target.files[0]) {
+                const previewAvatarUrl = URL.createObjectURL(event.target.files[0])
+                previewAvatar.current.src = previewAvatarUrl
+                setFormData((prev) => ({...prev, [name]: event.target.files[0]}))
+                if (checked) {
+                setErrorMessage((prev) => ({...prev, [name]: ''}))
+                }
+            }
+        } else {
+            setFormData((prev) => ({...prev, [name]: event.target.value})) 
+            if (checked && event.target.value.length > 0) {
+                setErrorMessage((prev) => ({...prev, [name]: ''}))
+            }
+        }
+    } 
+
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        setChecked(true)  
+        let isValid = true;
+        if (formData.username.length < 6) {
+            setErrorMessage((prev) => ({...prev, username: "The username must be at least 6 characters."})) 
+            isValid = false
+        } 
+        if (formData.email === '') {
+            setErrorMessage((prev) => ({...prev, email: "Please enter your email address."}))
+            isValid = false
+        }  else if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(formData.email)) {
+            setErrorMessage((prev) => ({...prev, email: "The email address you entered does not match with required format. Please enter your email address again."}))
+            isValid = false
+        }
+        if (formData.password === '') {
+            isValid = false
+            setErrorMessage((prev) => ({...prev, password: "Please enter your password."}))
+        }
+        if (formData.lofiUsername === '') {
+            isValid = false
+            setErrorMessage((prev) => ({...prev, lofiUsername: "Please enter your nickname."}))
+        }
+        if (formData.avatar === '') { 
+            isValid = false
+            setErrorMessage((prev) => ({...prev, avatar: "Please input your avatar."}))
+        } 
+        if (isValid) {
+            mutate(formData, {
+                onSuccess: (res) => {
+                    toast('Register account successfully !', {
+                        theme: 'dark',
+                        type: "success"
+                    })
+                },
+                onError: (err) => { 
+                    toast(`Register failed: ${err.response.data.message}`, {
+                        theme: "dark",
+                        type: "error"
+                    })
+                }
+            })
+        }
+    } 
+
+
     return (
         <div className={cx("wrapper")}>
             <img className={cx("logo")} src={images.logo} alt="logo" />
@@ -16,17 +108,20 @@ function SignUp() {
                     <h1 className={cx("heading-welcome")}>Nice to meet you!</h1>
                     <h2 className={cx("heading-content")}>Sign up for a free account.</h2>
                 </div>
-                <form className={cx("form")}>
+                <form className={cx("form")} onSubmit={handleSubmit}>
                     <div className={cx("input-box")}>
-                        <div className={cx("input-item")}>
+                        <div className={cx("input-item")}> 
                             <label htmlFor="username" className={cx("input-label")}>
                                 Username
                             </label>
+                            {checked && <label htmlFor="username" className={cx("input-label", "error-msg")}>
+                                {errorMessage.username}
+                            </label>}
                             <input
-                                type="username"
+                                type="text"
                                 id="username"
-                                placeholder="admin"
-                                name="username"
+                                name="username" 
+                                onChange={handleChange('username')}
                                 className={cx("input")}
                             />
                         </div>
@@ -34,11 +129,14 @@ function SignUp() {
                             <label htmlFor="email" className={cx("input-label")}>
                                 Email
                             </label>
+                            {checked && <label htmlFor="email" className={cx("input-label", "error-msg")}>
+                                {errorMessage.email}
+                            </label>}
                             <input
                                 type="email"
                                 id="email"
-                                placeholder="admin@company.com"
                                 name="email"
+                                onChange={handleChange('email')}
                                 className={cx("input")}
                             />
                         </div>
@@ -46,13 +144,49 @@ function SignUp() {
                             <label htmlFor="password" className={cx("input-label")}>
                                 Password
                             </label>
+                            {checked && <label htmlFor="password" className={cx("input-label", "error-msg")}>
+                                {errorMessage.password}
+                            </label>}
                             <input
                                 type="password"
                                 id="password"
-                                placeholder="123456"
                                 name="password"
+                                onChange={handleChange('password')}
                                 className={cx("input")}
                             />
+                        </div>
+                        <div className={cx("input-item")}>
+                            <label htmlFor="lofiUsername" className={cx("input-label")}>
+                                Nickname
+                            </label>
+                            {checked && <label htmlFor="lofiUsername" className={cx("input-label", "error-msg")}>
+                                {errorMessage.lofiUsername}
+                            </label>}
+                            <input
+                                type="text"
+                                id="lofiUsername"
+                                name="lofiUsername"
+
+                                onChange={handleChange('lofiUsername')}
+
+                                className={cx("input")}
+                            />
+                        </div>
+                        <div className={cx("input-item")}>
+                            <label htmlFor="avatar" className={cx("input-label")}>
+                                Avatar
+                            </label> 
+                            {checked && <label htmlFor="avatar" className={cx("input-label", "error-msg")}>
+                                {errorMessage.avatar}
+                            </label>}
+                            <img src={images.default_avatar} alt="preview-avatar" className={cx('preview-avatar')} ref={previewAvatar}/>
+                            <input
+                                type="file"
+                                id="avatar"
+                                name="avatar"
+                                onChange={handleChange('avatar')}
+                                className={cx("input")}
+                                />
                         </div>
                     </div>
                     <h4 className={cx("policy-text")}>
@@ -60,9 +194,9 @@ function SignUp() {
                         <a href=".">Privacy Policy & Term of Service</a>
                     </h4>
                     <div className={cx("signup-btn-box")}>
-                        <a href="." className={cx("signup-btn")}>
+                        <button type="submit" className={cx("signup-btn")}>
                             Sign Up
-                        </a>
+                        </button>
                     </div>
                 </form>
                 <footer className={cx("footer")}>

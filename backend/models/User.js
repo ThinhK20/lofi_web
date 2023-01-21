@@ -31,6 +31,12 @@ const UserScheme = new mongoose.Schema({
     verified: {
         type: Boolean,
         default: false
+    },
+    profile: {
+        wallpaper: {
+            type: String,
+            default: "c5630f2b69d4c3d762d3aab8716f68e1.jpg"
+        }   
     }
 }, {
     timestamps: true

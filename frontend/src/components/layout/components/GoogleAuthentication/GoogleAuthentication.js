@@ -20,7 +20,10 @@ const GoogleAuthentication = () => {
                 avatar: userObject.picture,
                 lofiUsername: userObject.name,
                 verified: true,
-                service: true
+                service: true,
+                profile: {
+                    wallpaper: "c5630f2b69d4c3d762d3aab8716f68e1.jpg"
+                }
             }
         })) 
         navigation('/')
