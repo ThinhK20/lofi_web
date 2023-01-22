@@ -15,10 +15,14 @@ const authController = {
             }
             const salt = await bcrypt.genSalt(10);
             const hashed = await bcrypt.hash(req.body.password, salt)  
-            const user = await User.findOne({ username: req.body.username }) 
-            if (user) return res.status(403).json({ 
+            const existingUser = await User.findOne({ username: req.body.username }, { username: 1 }) 
+            if (existingUser) return res.status(403).json({ 
                 message: "Username already exists !"
             }) 
+            const existingEmail = await User.findOne({ email: req.body.email }, { email: 1 }) 
+            if (existingEmail) return res.status(403).json({
+                message: "Email already exists !"
+            })
             console.log("Running here...")
             const newUser = await new User({
                 username: req.body.username,
