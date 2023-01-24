@@ -24,19 +24,19 @@ function TippyOption() {
 
     return (
         <div className={cx("wrapper")}>
-            <a href="/" className={cx("item")}>
+            <a href="/pricing" className={cx("item")}>
                 <FontAwesomeIcon icon={faDollarSign} className={cx("icon")} />
                 <h4 className={cx("name")}>Pricing</h4>
             </a>
-            <a href="/" className={cx("item")}>
+            <a href="/settings" className={cx("item")}>
                 <FontAwesomeIcon icon={faGear} className={cx("icon")} />
                 <h4 className={cx("name")}>General settings</h4>
             </a>
-            <a href="/" className={cx("item")}>
+            <a href="/contact" className={cx("item")}>
                 <FontAwesomeIcon icon={faMessage} className={cx("icon")} />
                 <h4 className={cx("name")}>Contact us</h4>
             </a>
-            <a href="/" className={cx("item")}>
+            <a href="/how-it-works" className={cx("item")}>
                 <FontAwesomeIcon icon={faGear} className={cx("icon")} />
                 <h4 className={cx("name")}>How it works</h4>
             </a>
@@ -44,7 +44,7 @@ function TippyOption() {
                 <FontAwesomeIcon icon={faMusic} className={cx("icon")} />
                 <h4 className={cx("name")}>Submit music</h4>
             </a>
-            <a href="/" className={cx("item")}>
+            <a href="/about-us" className={cx("item")}>
                 <FontAwesomeIcon icon={faExclamationCircle} className={cx("icon")} />
                 <h4 className={cx("name")}>About us</h4>
             </a> 

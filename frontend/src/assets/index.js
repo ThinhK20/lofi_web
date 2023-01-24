@@ -24,7 +24,9 @@ const images = {
     scenes_background_vanLife: require("~/assets/img/scenes-background-vanLife.png"),
     maintenance_img: require('~/assets/img/maintenance.gif'),
     loading_img: require('~/assets/img/loading.gif'),
-    default_avatar: require('~/assets/img/default-avatar.svg').default
+    default_avatar: require('~/assets/img/default-avatar.svg').default,
+    anime_dancing: require('~/assets/img/anime-dancing.gif'),
+    matsuri_smiling: require('~/assets/img/matsuri_smiling.gif'),
 
 };
 
