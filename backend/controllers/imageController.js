@@ -41,10 +41,8 @@ const imageController = {
    // /image/:imageName
    renderImage: async (req, res) => {
       try {
-         console.log(req.params.imageName);
          gfs.find({ filename: req.params.imageName }).toArray((err, files) => {
             if (err) return res.status(500).json(err);
-            console.log("FILE: " + files[0]);
             if (!files[0] || files.length <= 0) {
                return res.status(200).json("No files available");
             } 

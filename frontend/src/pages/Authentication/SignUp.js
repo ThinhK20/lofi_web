@@ -37,7 +37,7 @@ function SignUp() {
     const previewAvatar = useRef()
 
     const handleChange = (name) => (event) => { 
-        if (name === 'avatar') { 
+        if (name === 'avatar') {  
             if (event.target.files && event.target.files[0]) {
                 const previewAvatarUrl = URL.createObjectURL(event.target.files[0])
                 previewAvatar.current.src = previewAvatarUrl
@@ -45,6 +45,9 @@ function SignUp() {
                 if (checked) {
                 setErrorMessage((prev) => ({...prev, [name]: ''}))
                 }
+            } else {
+                previewAvatar.current.src = images.default_avatar
+                setFormData((prev) => ({...prev, [name]: ''}))
             }
         } else {
             setFormData((prev) => ({...prev, [name]: event.target.value})) 
@@ -87,6 +90,15 @@ function SignUp() {
                     toast('Register account successfully !', {
                         theme: 'dark',
                         type: "success"
+                    }) 
+                    setFormData(() => {
+                        return {
+                            username: "",
+                            email: "",
+                            password: "",
+                            lofiUsername: "",
+                            avatar: "",
+                        }
                     })
                 },
                 onError: (err) => { 
@@ -128,6 +140,7 @@ function SignUp() {
                                 type="text"
                                 id="username"
                                 name="username" 
+                                value={formData.username}
                                 onChange={handleChange('username')}
                                 className={cx("input")}
                             />
@@ -143,6 +156,8 @@ function SignUp() {
                                 type="email"
                                 id="email"
                                 name="email"
+                                value={formData.email}
+
                                 onChange={handleChange('email')}
                                 className={cx("input")}
                             />
@@ -158,6 +173,8 @@ function SignUp() {
                                 type="password"
                                 id="password"
                                 name="password"
+                                value={formData.password}
+
                                 onChange={handleChange('password')}
                                 className={cx("input")}
                             />
@@ -173,6 +190,7 @@ function SignUp() {
                                 type="text"
                                 id="lofiUsername"
                                 name="lofiUsername"
+                                value={formData.lofiUsername}
 
                                 onChange={handleChange('lofiUsername')}
 

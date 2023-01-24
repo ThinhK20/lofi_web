@@ -5,8 +5,6 @@ const Image = require("../models/Image")
 
 const authController = {
     register: async(req, res) => {  
-        console.log(req.body)
-        console.log("File: ", req.file)
         try { 
             if (req.file.contentType != 'image/jpeg' && req.file.contentType != 'image/png' && req.file.contentType != 'image/svg+xml') {
                 return res.status(403).json({
@@ -23,7 +21,6 @@ const authController = {
             if (existingEmail) return res.status(403).json({
                 message: "Email already exists !"
             })
-            console.log("Running here...")
             const newUser = await new User({
                 username: req.body.username,
                 password: hashed,
@@ -31,21 +28,16 @@ const authController = {
                 avatar: req.file.filename,
                 lofiUsername: req.body.lofiUsername
             })  
-            console.log("Passing here: ", newUser)
 
             const newImage = await new Image({
                 caption: "user-avatar__" + req.body.username,
                 imageName: req.file.filename,
                 imageId: req.file.id,
              });
-            console.log("Step 1")
 
             await newUser.save();
-            console.log("Step 2")
             await newImage.save();
-            console.log("Step 3")
             const { password, ...userDTO }  = newUser._doc
-            console.log("Step 4")
 
             return res.status(200).json({
                 message: "Register successfully !",
@@ -86,7 +78,6 @@ const authController = {
     },
     delete: async(req, res) => {
         try {
-            console.log("ID: ", req.params.id) 
             const user = await User.findById(req.params.id) 
             if (!user) {
                 return res.status(500).json("User is not exist !")

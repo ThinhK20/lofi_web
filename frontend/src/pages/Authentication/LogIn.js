@@ -35,13 +35,11 @@ function Login() {
             password: formData.get('password')
         }, {
             onSuccess: (data) => {
-                console.log("Data: ", data.data)
                 if (!data.data.user.verified) {
                     mutateSendVerifyEmail({
                         email: data.data.user.email
                     }, {
                         onSuccess: (res) => {
-                            console.log("Res: ", res.data) 
                             navigate('/verifyAccount', {
                                 state: {
                                     userData: data.data,

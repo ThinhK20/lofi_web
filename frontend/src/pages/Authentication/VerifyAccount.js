@@ -14,7 +14,6 @@ const cx = classNames.bind(styles);
 
 function VerifyAccount() {  
     const { state } = useLocation()  
-    console.log("State: ", state) 
     const dispatch = useDispatch()
 
     const navigate = useNavigate()
@@ -22,12 +21,9 @@ function VerifyAccount() {
     const handleSubmit = async(e) => {
         e.preventDefault();  
         const formData = new FormData(e.target)  
-        console.log(state.verifyCode, formData.get('verifyCode'))
         if (state.verifyCode === (formData.get('verifyCode').trim() - '0')) {
-            console.log("Code is valid")
             authAPI.verifyUser(state.userData.user.email)
                 .then(() => {
-                    console.log("Successfully !!!") 
                     dispatch(setUserData(state.userData))  
                     navigate('/')
                 })
