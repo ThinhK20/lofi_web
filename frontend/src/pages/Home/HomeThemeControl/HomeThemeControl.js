@@ -73,7 +73,13 @@ function HomeThemeControl() {
 
     useEffect(() => {
         currentSong.current.volume = audioVolume
-    }, [audioVolume])
+    }, [audioVolume]) 
+
+    useEffect(() => {
+        return () => {
+            currentSong.current.pause()
+        }
+    })
 
 
     return (
