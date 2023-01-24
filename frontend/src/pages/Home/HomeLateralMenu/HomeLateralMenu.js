@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentSongId, setMutedAudio, setVolume } from "~/components/Redux/generalSlice";
 import { useQuery } from "@tanstack/react-query";
 import audioAPI from "~/api/audioAPI";
+import { updateNoiseStorage } from "~/components/Redux/audioSlice";
 
 const cx = classNames.bind(styles);
 
@@ -32,7 +33,9 @@ function HomeLateralMenu() {
         queryFn: () => audioAPI.getAllAudioWithoutNoise(),
         keepPreviousData: true,
         staleTime: Infinity,
-    });
+    });  
+
+    const { audioNoises } = useSelector(state => state.audioStorage)
 
     const { data: audioNoiseResponse, isSuccess: isAudioNoiseSuccess } = useQuery({
         queryKey: ["audioNoiseData"],
@@ -41,24 +44,6 @@ function HomeLateralMenu() {
         staleTime: Infinity,
     });
 
-    const audioNoises = useMemo(() => {
-        if (isAudioNoiseSuccess) {
-            return audioNoiseResponse.data.map((noise) => {
-                return {
-                    ...noise,
-                    name: noise.caption
-                        .split("-")
-                        .map((ch) => ch.charAt(0).toUpperCase() + ch.slice(1))
-                        .join(" "),
-                    audio: (() => {
-                        const newAudio = new Audio(audioAPI.renderAudio(noise.audioName))
-                        newAudio.loop = true
-                        return newAudio 
-                    })()
-                };
-            });
-        }
-    }, [isAudioNoiseSuccess]);
 
     const optionsElement = useRef();
     const [tippyIndexs, setTippyIndexs] = useState([false, false, false, false]);
@@ -128,12 +113,16 @@ function HomeLateralMenu() {
 
     useEffect(() => {
         if (isAudioNoiseSuccess) {
-            const rainNoise = audioNoises.find(x => x.caption === 'rain-city').audio
-            if (rain) {
-                rainNoise.volume = 1
-                rainNoise.play()
+            const rainNoise = audioNoises.find(x => x.caption === 'rain-city')?.audio
+            if (rain) { 
+                if (rainNoise) {
+                    rainNoise.volume = 1
+                    rainNoise?.play()
+                }
             } else {
-                rainNoise.pause()
+                if (rainNoise) {
+                    rainNoise?.pause()
+                }
             }
         }
     }, [rain]) 
@@ -144,7 +133,34 @@ function HomeLateralMenu() {
                 noise.audio.muted = mutedAudio
             })
         }
-    }, [mutedAudio]) 
+    }, [mutedAudio])  
+
+    useEffect(() => {
+        if (isAudioNoiseSuccess && audioNoises.length === 0) { 
+            dispatch(updateNoiseStorage(audioNoiseResponse.data.map((noise) => {
+                return {
+                    ...noise,
+                    name: noise.caption
+                        .split("-")
+                        .map((ch) => ch.charAt(0).toUpperCase() + ch.slice(1))
+                        .join(" "),
+                    audio: (() => {
+                        const newAudio = new Audio(audioAPI.renderAudio(noise.audioName))
+                        newAudio.loop = true
+                        return newAudio 
+                    })()
+                };
+            })))
+        }
+    }, [isAudioNoiseSuccess])  
+
+    useEffect(() => {
+        return () => {
+            audioNoises.forEach((noise) => {
+                noise?.audio?.pause()
+            })
+        }
+    }, [])
 
 
    

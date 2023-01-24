@@ -7,15 +7,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import audioAPI from "~/api/audioAPI";
 import { setCurrentSongId } from "~/components/Redux/generalSlice";
+import { updateSongStorage } from "~/components/Redux/audioSlice";
 const cx = classNames.bind(styles);
 
 function HomeThemeControl() {
     const [playing, setPlaying] = useState(false);
     const dispatch = useDispatch()
-    const {currentSongId, mutedAudio, audioVolume } = useSelector((state) => state.general);  
+    const {currentSongId, mutedAudio, audioVolume } = useSelector((state) => state.general);   
+    const { audioSongs } = useSelector((state) => state.audioStorage)
 
  
-    const currentSong = useRef(new Audio())
 
     const { data: audioResponse, isSuccess: isAudioSuccess } = useQuery({
         queryKey: ["audioWithoutNoiseData"],
@@ -42,6 +43,7 @@ function HomeThemeControl() {
     };
 
     const handleBackSong = () => { 
+
         if (currentSongId === 0) {
             dispatch(setCurrentSongId(audioResponse.data.length - 1))
         }  else {
@@ -49,37 +51,67 @@ function HomeThemeControl() {
         }
     };  
 
+    // when the user clicked next or prev song
     useEffect(() => {
-        if (isAudioSuccess) {
-            currentSong.current.src = audioAPI.renderAudio(audioResponse.data[currentSongId].audioName)  
-            if (!currentSong.current.loop) currentSong.current.loop = true
-            if (playing) {
-                currentSong.current.play() 
-            } 
+        if (isAudioSuccess && playing) {
+            audioSongs.forEach((song, id) => {
+                if (id === currentSongId) {
+                    song.audio.play()
+                } else {
+                    song.audio.pause()
+                }
+            })
         } 
     }, [currentSongId, isAudioSuccess]) 
 
     useEffect(() => {
-        if (playing) { 
-            currentSong.current.play()
-        } else {
-            currentSong.current.pause()
+        if (isAudioSuccess) {
+            if (playing) {  
+                audioSongs[currentSongId]?.audio?.play()
+            } else {
+                audioSongs[currentSongId]?.audio?.pause()
+            }
         }
     }, [playing])
 
     useEffect(() => {
-        currentSong.current.muted = mutedAudio 
+        if (isAudioSuccess) {
+            audioSongs.forEach((song) => {
+                song.audio.muted = mutedAudio
+            })
+        }
     }, [mutedAudio]) 
 
     useEffect(() => {
-        currentSong.current.volume = audioVolume
-    }, [audioVolume]) 
+        if (isAudioSuccess) {
+            audioSongs.forEach((song) => {
+                song.audio.volume = audioVolume
+            })
+        }
+    }, [audioVolume])  
+
+    useEffect(() => {
+        if (isAudioSuccess && audioSongs.length === 0) {
+            dispatch(updateSongStorage(audioResponse.data.map((song) => {
+                return {
+                    ...song, 
+                    audio: (() => {
+                        const newAudio = new Audio(audioAPI.renderAudio(song.audioName))
+                        newAudio.loop = true
+                        return newAudio 
+                    })()
+                }
+            })))
+        }
+    }, [isAudioSuccess])
 
     useEffect(() => {
         return () => {
-            currentSong.current.pause()
+            if (isAudioSuccess) {
+                audioSongs[currentSongId]?.audio?.pause()
+            }
         }
-    })
+    }, [])
 
 
     return (

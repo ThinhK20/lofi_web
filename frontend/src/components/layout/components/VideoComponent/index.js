@@ -16,7 +16,7 @@ const VideoComponent = ({ srcVideo, themeCondition, rainCondition }) => {
             <video
                 className={cx("video-background", theme === themeCondition && rain === rainCondition && "opacity-1")}
                 src={srcVideo}
-                autoPlay
+                autoPlay 
                 loop
                 muted 
                 onLoadedData={() => setIsLoading(false)}
