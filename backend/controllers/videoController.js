@@ -19,8 +19,8 @@ connect.once('open', () => {
 const videoController = {
     upload: async(req, res) => { 
         try {
-            const video = await Video.findOne({ caption: req.body.caption })
-            if (video) return res.status(200).json("Video already exists !") 
+            const existingVideo = await Video.findOne({ caption: req.body.caption, topic: req.body.topic }) 
+            if (existingVideo) return res.status(200).json("Video already exists !") 
             if (req.file.contentType != 'video/mp4' && req.file.contentType != 'video/x-matroska') {
                 return res.status(403).json('Video type is not valid: ' +  req.file.contentType)
             }

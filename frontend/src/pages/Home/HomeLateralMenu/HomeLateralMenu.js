@@ -9,6 +9,7 @@ import {
     faCirclePlay,
     faGuitar,
     faImage,
+    faLock,
     faMoon,
     faMugHot,
     faMusic,
@@ -16,11 +17,11 @@ import {
     faVolumeHigh,
     faVolumeMute,
 } from "@fortawesome/free-solid-svg-icons";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect,  useRef, useState } from "react";
 import Tippy from "@tippyjs/react/headless"; // different import path!
 import { images } from "~/assets";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentSongId, setMutedAudio, setVolume } from "~/components/Redux/generalSlice";
+import { setCurrentScenes, setCurrentSongId, setMutedAudio, setVolume } from "~/components/Redux/generalSlice";
 import { useQuery } from "@tanstack/react-query";
 import audioAPI from "~/api/audioAPI";
 import { updateNoiseStorage } from "~/components/Redux/audioSlice";
@@ -48,7 +49,7 @@ function HomeLateralMenu() {
     const optionsElement = useRef();
     const [tippyIndexs, setTippyIndexs] = useState([false, false, false, false]);
     const dispatch = useDispatch();
-    const { mutedAudio, currentSongId, rain } = useSelector((state) => state.general); 
+    const { mutedAudio, currentSongId, rain, currentScenes } = useSelector((state) => state.general); 
 
     const handleNoise = (e, index) => {
         const value = e.target.value / 100;
@@ -162,7 +163,13 @@ function HomeLateralMenu() {
         }
     }, [])
 
-
+    const handleScenes = (event) => { 
+        const value = event.target.getAttribute("value")
+        if (currentScenes !== value) {  
+            console.log("Running...")
+            dispatch(setCurrentScenes(value))
+        }
+    }
    
 
     return (
@@ -378,53 +385,97 @@ function HomeLateralMenu() {
                                     <img
                                         className={cx("scene-background")}
                                         src={images.scenes_background_chillVipe}
-                                        alt="scenes-background"
+                                        alt="scenes-background"  
+                                        onClick={handleScenes}
+                                        value="chill-vibes"
+
                                     />
                                     <img
                                         className={cx("scene-background")}
-                                        src={images.scenes_background_amidreaming}
+                                        src={images.scenes_background_seoul}
                                         alt="scenes-background"
+                                        onClick={handleScenes}
+                                        value="seoul-city"
                                     />
-                                    <img
-                                        className={cx("scene-background")}
-                                        src={images.scenes_background_cafe}
-                                        alt="scenes-background"
-                                    />
-                                    <img
-                                        className={cx("scene-background")}
-                                        src={images.scenes_background_honolulu}
-                                        alt="scenes-background"
-                                    />
-                                    <img
-                                        className={cx("scene-background")}
-                                        src={images.scenes_background_lofiCaffe}
-                                        alt="scenes-background"
-                                    />
-                                    <img
-                                        className={cx("scene-background")}
-                                        src={images.scenes_background_lofiDesk}
-                                        alt="scenes-background"
-                                    />
-                                    <img
+                                    <div className={cx("scene-overlay__update-soon")}> 
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                        <img
+                                            className={cx("scene-background")}
+                                            src={images.scenes_background_amidreaming}
+                                            alt="scenes-background"
+                                        />
+                                    </div> 
+                                    <div className={cx("scene-overlay__update-soon")}> 
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                        <img
+                                            className={cx("scene-background")}
+                                            src={images.scenes_background_cafe}
+                                            alt="scenes-background"
+                                        />
+                                    </div> 
+                                    <div className={cx("scene-overlay__update-soon")}> 
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                        <img
+                                            className={cx("scene-background")}
+                                            src={images.scenes_background_honolulu}
+                                            alt="scenes-background"
+                                        />
+                                    </div> 
+
+                                    <div className={cx("scene-overlay__update-soon")}> 
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                        <img
+                                            className={cx("scene-background")}
+                                            src={images.scenes_background_lofiCaffe}
+                                            alt="scenes-background"
+                                        />
+                                    </div> 
+                                    <div className={cx("scene-overlay__update-soon")}> 
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                        <img
+                                            className={cx("scene-background")}
+                                            src={images.scenes_background_lofiDesk}
+                                            alt="scenes-background"
+                                        />
+                                    </div>  
+
+                                    <div className={cx("scene-overlay__update-soon")}> 
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                        <img
                                         className={cx("scene-background")}
                                         src={images.scenes_background_springLake}
                                         alt="scenes-background"
                                     />
-                                    <img
+                                    </div>  
+
+                                    <div className={cx("scene-overlay__update-soon")}> 
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                        <img
                                         className={cx("scene-background")}
                                         src={images.scenes_background_northenLake}
                                         alt="scenes-background"
                                     />
-                                    <img
+                                    </div>  
+
+                                    <div className={cx("scene-overlay__update-soon")}> 
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                        <img
                                         className={cx("scene-background")}
                                         src={images.scenes_background_summerDay}
                                         alt="scenes-background"
                                     />
-                                    <img
+                                    </div>  
+                                  
+                                    <div className={cx("scene-overlay__update-soon")}> 
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                        <img
                                         className={cx("scene-background")}
                                         src={images.scenes_background_vanLife}
                                         alt="scenes-background"
                                     />
+                                    </div> 
+                                  
+                                    
                                 </div>
                             </div>
                         </div>

@@ -22,6 +22,8 @@ const images = {
     scenes_background_springLake: require("~/assets/img/scenes-background-springLake.png"),
     scenes_background_summerDay: require("~/assets/img/scenes-background-summerDay.png"),
     scenes_background_vanLife: require("~/assets/img/scenes-background-vanLife.png"),
+    scenes_background_seoul: require("~/assets/img/scenes-background-seoul.png"),
+    
     maintenance_img: require('~/assets/img/maintenance.gif'),
     loading_img: require('~/assets/img/loading.gif'),
     default_avatar: require('~/assets/img/default-avatar.svg').default,

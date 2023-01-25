@@ -2,14 +2,14 @@ import { createSlice } from '@reduxjs/toolkit'
 
 
 const initialValue = {
-    videos: []
+    videos: {}
 }
 const videoSlice = createSlice({
     name: 'videoStorage', 
     initialState: initialValue,
     reducers: {
         updateVideoStorage(state, action) {
-            state.videos = action.payload
+            state.videos = {...state.videos, [action.payload.topic]: action.payload.data}
         }        
     }
 })
