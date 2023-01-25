@@ -1,7 +1,7 @@
 import React from "react";
-import AboutUs from "~/pages/AboutUs";
-import Contact from "~/pages/Contact";
-import HowItWorks from "~/pages/HowItWorks";
+const AboutUs = React.lazy(() => import("~/pages/AboutUs"))
+const Contact = React.lazy(() => import("~/pages/Contact")) 
+const HowItWorks = React.lazy(() => import("~/pages/HowItWorks")) 
 const Login = React.lazy(() => import("~/pages/Authentication/LogIn"))
 const Profile = React.lazy(() => import("~/pages/Profile"))
 const SignUp = React.lazy(() => import("~/pages/Authentication/SignUp"))

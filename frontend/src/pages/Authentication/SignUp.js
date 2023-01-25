@@ -4,10 +4,11 @@ import { images } from "~/assets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import {  useRef, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import authAPI from "~/api/authAPI";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"; 
+import Avatar from "~/components/layout/components/Avatar";
 
 const cx = classNames.bind(styles);
 
@@ -26,6 +27,7 @@ function SignUp() {
     }) 
 
     const [checked, setChecked] = useState(false) 
+    const [showCropAvatar, setShowCropAvatar] = useState(false) 
 
     const [errorMessage, setErrorMessage] = useState({
         username: "",
@@ -34,20 +36,20 @@ function SignUp() {
         lofiUsername: "",
         avatar: "",
     }) 
-    const previewAvatar = useRef()
+    const [previewImage, setPreviewImage] = useState('')
 
     const handleChange = (name) => (event) => { 
         if (name === 'avatar') {  
             if (event.target.files && event.target.files[0]) {
                 const previewAvatarUrl = URL.createObjectURL(event.target.files[0])
-                previewAvatar.current.src = previewAvatarUrl
-                setFormData((prev) => ({...prev, [name]: event.target.files[0]}))
+                setPreviewImage(previewAvatarUrl) 
+                setShowCropAvatar(true)
                 if (checked) {
-                setErrorMessage((prev) => ({...prev, [name]: ''}))
+                    setErrorMessage((prev) => ({...prev, [name]: ''}))
                 }
-            } else {
-                previewAvatar.current.src = images.default_avatar
+            } else { 
                 setFormData((prev) => ({...prev, [name]: ''}))
+                setPreviewImage('')
             }
         } else {
             setFormData((prev) => ({...prev, [name]: event.target.value})) 
@@ -99,7 +101,8 @@ function SignUp() {
                             lofiUsername: "",
                             avatar: "",
                         }
-                    })
+                    }) 
+                    setPreviewImage(() => "")
                 },
                 onError: (err) => { 
                     if (err.response.data.message) {
@@ -116,9 +119,13 @@ function SignUp() {
                 }
             })
         }
+    }  
+
+    const handleCropAvatar = (croppedImg, fileCroppedImg) => {
+        setPreviewImage(croppedImg)
+        setFormData((prev) => ({...prev, avatar: fileCroppedImg}))
     } 
-
-
+    
     return (
         <div className={cx("wrapper")}>
             <img className={cx("logo")} src={images.logo} alt="logo" />
@@ -203,8 +210,15 @@ function SignUp() {
                             </label> 
                             {checked && <label htmlFor="avatar" className={cx("input-label", "error-msg")}>
                                 {errorMessage.avatar}
-                            </label>}
-                            <img src={images.default_avatar} alt="preview-avatar" className={cx('preview-avatar')} ref={previewAvatar}/>
+                            </label>} 
+                            {previewImage &&
+                                <img src={previewImage} alt="preview-avatar" className={cx('preview-avatar')}/>
+                            }
+                            {
+                                showCropAvatar &&
+                                <Avatar imgUrl={previewImage} show={showCropAvatar} onShow={setShowCropAvatar} onCropped={handleCropAvatar} />
+                            }
+                            
                             <input
                                 type="file"
                                 id="avatar"
