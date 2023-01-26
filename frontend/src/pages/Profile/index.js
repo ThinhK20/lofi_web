@@ -11,52 +11,15 @@ import jwtDecode from "jwt-decode";
 import { useMutation } from "@tanstack/react-query";
 import userAPI from "~/api/userAPI";
 import { toast } from "react-toastify";
+import EditProfile from "./EditProfile";
 
 const cx = classNames.bind(styles);
-function Profile() {
+function Profile() { 
     const user = useSelector(state => state.user)
     const theme = useSelector(state => state.general).theme;   
-    const [avatar, setAvatar] = useState()
-    const [showAvatar, setShowAvatar] = useState(false)  
+    const [showEditProfile, setShowEditProfile] = useState(false)  
     const navigate = useNavigate()
-    const avatarMutation = useMutation({
-        mutationFn: userAPI.uploadAvatar
-    })
-
-    const handleUploadAvatar = (event) => {
-        setShowAvatar(true)
-        setAvatar(event.target.files[0])
-    } 
-
-    const handleCroppedAvatar = (url, file) => { 
-        if (url === '' || file === '') return;
-        const decode = jwtDecode(user.accessToken)
-        avatarMutation.mutate({
-            id: decode._id,
-            avatar: file
-        }, {
-            onSuccess: () => {
-                toast("Upload avatar successfully !", {
-                    theme: "dark",
-                    type: "success"
-                })
-            },
-            onError: (err) => {
-                if (err.response.data.message) {
-                    toast(`Upload avatar failed: ${err.response.data.message}.`, {
-                        theme: "dark",
-                        type: "error"
-                    })
-                } else {
-                    toast("Upload avatar failed ! Please try again.", {
-                        theme: "dark",
-                        type: "error"
-                    })
-                }
-            } 
-        })
-    } 
-
+    
     useEffect(() => {
         if (!user) {
             navigate('/login')
@@ -74,18 +37,10 @@ function Profile() {
                         <div className={cx("heading-avatar-box")}>
                             <div className={cx('heading-avatar-box__content')}>
                                 <img src={!user.user.service ? imageAPI.getImage(user.user.avatar) : user.user.avatar} alt="avatar" className={cx("heading-avatar")} />
-                                <label htmlFor="upload-avatar" className={cx('upload-avatar')}>
-                                    <FontAwesomeIcon icon={faCamera} />
-                                </label> 
-                                {
-                                    showAvatar && 
-                                    <Avatar imgUrl={URL.createObjectURL(avatar)} show={showAvatar} onShow={setShowAvatar} onCropped={handleCroppedAvatar}/>
-                                }
-                                <input type={"file"} id="upload-avatar" name="avatar" onChange={handleUploadAvatar} alt="upload-avatar-input" hidden />
                             </div>
                             <h1 className={cx("heading-name")}>{user.user.lofiUsername}</h1>
                         </div>
-                        <button className={cx("btn")}>Edit profile</button>
+                        <button className={cx("btn")} onClick={() => setShowEditProfile(true) } >Edit profile</button>
                     </div>
                     <div className={cx("inner-content")}>
                         <div className={cx("inner-left")}>
@@ -98,10 +53,10 @@ function Profile() {
                                 <a
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    href="https://www.facebook.com/profile.php?id=100025801546467"
+                                    href={user.user.profile.facebook}
                                     className={cx("text-content")}
                                 >
-                                    Thịnh Nguyễn
+                                    {user.user.lofiUsername}
                                 </a>
                             </div>
                             <div className={cx("inner-row-item")}>
@@ -109,7 +64,7 @@ function Profile() {
                                 <a
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    href="https://www.facebook.com/profile.php?id=100025801546467"
+                                    href={`mailto:${user.user.email}`}
                                     className={cx("text-content")}
                                 >
                                     {user.user.email}
@@ -120,10 +75,14 @@ function Profile() {
                                 <a
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    href="https://twitter.com/syromei"
+                                    href={user.user.profile.twitter}
                                     className={cx("text-content")}
                                 >
-                                    @syromei
+                                    { user.user.profile.twitter !== '' &&
+                                    <>
+                                        @{user.user.profile.twitter.split("/")[user.user.profile.twitter.split("/").length - 1]}
+                                    </>
+                                    }
                                 </a>
                             </div>
                             <div className={cx("inner-row-item")}>
@@ -131,10 +90,10 @@ function Profile() {
                                 <a
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    href="https://www.facebook.com/profile.php?id=100025801546467"
+                                    href={`tel:${user.user.profile.phone}`}
                                     className={cx("text-content")}
                                 >
-                                    0783877917
+                                    {user.user.profile.phone}
                                 </a>
                             </div>
                         </div>
@@ -149,7 +108,7 @@ function Profile() {
                             </div>
                             <div className={cx("inner-row-item")}>
                                 <h4 className={cx("title")}>Location: </h4>
-                                <span className={cx("text-content")}>Tokyo, Japan</span>
+                                <span className={cx("text-content")}>{user.user.profile.location}</span>
                             </div>
                             <div className={cx("inner-row-item")}>
                                 <h4 className={cx("title")}>Birthdate: </h4>
@@ -157,11 +116,15 @@ function Profile() {
                             </div>
                             <div className={cx("inner-row-item")}>
                                 <h4 className={cx("title")}>Gender: </h4>
-                                <span className={cx("text-content")}>Male</span>
+                                <span className={cx("text-content")}>{user.user.profile.gender}</span>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  
+                {
+                    showEditProfile &&
+                    <EditProfile onShow={setShowEditProfile} />
+                }
             </div>
         }
        </>

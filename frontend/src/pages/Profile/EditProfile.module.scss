@@ -1,0 +1,171 @@
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(91, 112, 131, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    color: #fff;
+}
+
+
+
+.wallpaper-group { 
+    position: relative;
+    & .wallpaper{
+        position: relative;
+        height: 200px;
+        width: 100%;
+        object-fit: cover;
+        object-position: center 45%; 
+        filter: brightness(0.6);
+    } 
+
+    & .upload-wallpaper {
+        position: absolute;
+        right: 50%;
+        top: 50%;
+        font-size: 2.4rem;
+        padding: 12px;
+        transform: translateY(-50%) translateX(50%);
+        background-color: rgba(0,0,0, 0.6);
+        border-radius: 50%;
+        cursor: pointer;  
+        transition: all 0.4s ease;
+
+        &:hover {
+            filter: brightness(0.8);
+        }
+    }
+    
+}
+
+
+.heading {
+    color: #fff; 
+    font-size: 2.4rem;
+    padding: 20px 50px;
+
+}
+
+.form-submit {  
+    position: relative;
+    background-color: rgba(0,0,0, 1);
+    height: 80vh;
+    width: 60vw;
+    border-radius: 12px; 
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    padding: 50px;
+    position: relative;
+}
+
+.form-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 50px;
+    gap: 20px
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 20px
+}
+
+.input-label {
+    color: #fff;
+    width: 80px;
+}
+
+.input-item {
+    background-color: #1f2329;
+    caret-color: var(--color-primary);
+    color: var(--color-default);
+    font-size: 1.6rem;
+    font-weight: 400;
+    outline: none;
+    border: 1px;
+    border-color: #fff;
+    padding: 16px;
+    transition: all 0.3s ease;
+    width: 275px;
+    border-radius: 12px; 
+
+} 
+
+
+
+.image-group {
+    position: relative;
+}
+
+.avatar-group {
+    position: absolute;
+    bottom: -50px;
+    left: 50px;
+    & .avatar {
+        width: 125px;
+        height: 125px;
+        border-radius: 50%;
+        filter: brightness(0.6);
+    } 
+
+    & .upload-avatar {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        top: 50%;        
+        font-size: 2.4rem;
+        padding: 12px;
+        background-color: rgba(0,0,0, 0.6);
+        border-radius: 50%;
+        cursor: pointer;  
+        transition: all 0.4s ease;
+
+        &:hover {
+            filter: brightness(0.8);
+        }
+    }
+    
+} 
+
+.group-btn {
+    display: flex;
+    align-items: center;
+    gap: 20px;  
+    justify-content: flex-end; 
+    margin-right: 100px;
+
+    & .btn-save, .btn-cancel {
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-size: 1.6rem;
+        font-weight: 500; 
+        cursor: pointer;
+         transition: all 0.4s ease;
+        &:hover {
+            filter: brightness(0.6);
+        }
+    }
+
+    & .btn-save {
+        background-color: var(--color-primary);
+        color: #000;
+    
+
+    }
+
+    & .btn-cancel {
+
+    }
+}

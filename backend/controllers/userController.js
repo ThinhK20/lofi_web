@@ -23,6 +23,29 @@ const userController = {
         } catch(err) {
             return res.status(500).json(err)
         }
+    },
+    updateProfileInfo: async(req, res) => { 
+        console.log(req.body)
+        try {
+            const user = await User.findById(req.params.id) 
+            if (!user) return res.status(403).json({
+                message: "User is not exists !"
+            })
+            user.profile = {
+                birthdate: req.body.birthdate,
+                facebook: req.body.facebook,
+                gender: req.body.gender,
+                location: req.body.location,
+                phone: req.body.phone,
+                twitter: req.body.twitter
+            }
+            await user.save()
+            return res.status(200).json({
+                message: "Update successfully !"
+            })
+        } catch(err) {  
+            return res.status(500).json(err)
+        }
     }
 }
 
