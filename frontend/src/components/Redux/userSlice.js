@@ -8,10 +8,13 @@ const userSlice = createSlice({
     reducers: {
         setUserData(state, action) {
             return action.payload
+        },
+        uploadAvatar(state, action) {
+            state.user.avatar = action.payload
         }
     }
 })
 
 const { actions } = userSlice
-export const { setUserData  } = actions
+export const { setUserData, uploadAvatar  } = actions
 export default userSlice.reducer

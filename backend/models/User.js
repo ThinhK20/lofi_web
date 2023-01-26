@@ -36,7 +36,31 @@ const UserScheme = new mongoose.Schema({
         wallpaper: {
             type: String,
             default: "c5630f2b69d4c3d762d3aab8716f68e1.jpg"
-        }   
+        },
+        gender: {
+            type: String,
+            default: "Other"
+        },
+        location: {
+            type: String,
+            default: ""
+        },
+        birthdate: {
+            type: String,
+            default: ""
+        },
+        facebook: {
+            type: String,
+            default: ""
+        },
+        twitter: {
+            type: String,
+            default: ""
+        },
+        phone:  {
+            type: String,
+            default: ""
+        }
     }
 }, {
     timestamps: true

@@ -12,7 +12,7 @@ let gfs;
 connect.once("open", () => {
    gfs = new mongoose.mongo.GridFSBucket(connect.db, {
       bucketName: "uploads",
-   });
+   }); 
 });
 
 const imageController = {
@@ -53,6 +53,42 @@ const imageController = {
          return res.status(500).json(err);
       }
    },
+   deleteFileFromID: async(req, res) => {
+      try {
+         const imgID = req.params.id || req.user.avatar.id
+         gfs.delete(new mongoose.Types.ObjectId(imgID), (err, data) => {
+            if (err) return res.status(404).json({
+               message: "Not found this file: " + err
+            })
+            return res.status(200).json({
+               message: `Deleted successfully !`
+            })
+         })
+      } catch(err) {
+         return res.status(500).json(err)
+      }
+   },
+   deleteFileFromFileName: async(req, res) => {
+      try {
+         gfs.find({ filename: req.params.filename }).toArray((err, files) => {
+            if (err) return res.status(500).json(err);
+            if (!files[0] || files.length <= 0) {
+               return res.status(200).json("No files available");
+            } 
+            gfs.delete(new mongoose.Types.ObjectId(files[0]._id), (errDelete, data) => {
+               if (errDelete)  return res.status(404).json({
+                  message: "Not found this file: " + err
+               })
+               return res.status(200).json({
+                  message: `Deleted successfully !`
+               })
+            })
+            
+         });
+      } catch(err) {
+
+      }
+   }
 };
 
 module.exports = imageController;

@@ -157,18 +157,19 @@ function HomeLateralMenu() {
 
     useEffect(() => {
         return () => {
-            audioNoises.forEach((noise) => {
-                noise?.audio?.pause()
-            })
+            if (isAudioNoiseSuccess) {
+                audioNoises.forEach((noise) => {
+                    noise.audio.pause()
+                })
+            }
         }
     }, [])
 
     const handleScenes = (event) => { 
         const value = event.target.getAttribute("value")
         if (currentScenes !== value) {  
-            console.log("Running...")
             dispatch(setCurrentScenes(value))
-        }
+        } 
     }
    
 

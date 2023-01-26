@@ -2,18 +2,19 @@ const express = require("express")
 const cors = require("cors")
 const dotenv = require("dotenv")
 const cookieParser =require("cookie-parser") 
-const authRouter = require("./routes/authRouter") 
 const mongoose = require("mongoose") 
 const morgan = require('morgan') 
 const passport = require("passport") 
 const session = require('express-session')
 
 
+const authRouter = require("./routes/authRouter") 
 const imageRouter = require('./routes/imageRouter') 
 const videoRouter = require('./routes/videoRouter')
 const audioRouter = require('./routes/audioRouter')  
 const emailRouter = require('./routes/emailRouter') 
 const googleRouter = require('./routes/googleRouter')
+const userRouter = require('./routes/userRouter')
 
 
 dotenv.config()
@@ -47,6 +48,7 @@ app.use("/v1/video", videoRouter)
 app.use("/v1/audio", audioRouter)
 app.use("/v1/email", emailRouter) 
 app.use("/v1/auth/google", googleRouter) 
+app.use("/v1/user", userRouter) 
 
 app.use((_, res) => {
     res.status(404).json("404 Not Found")

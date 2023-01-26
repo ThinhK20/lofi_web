@@ -121,3 +121,18 @@
         display: block;
     }
 }
+ 
+
+.heading-avatar-box__content {
+    position: relative;
+    & .upload-avatar {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 4px;
+        background-color: #ccc;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+}

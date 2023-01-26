@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import Cropper from "react-easy-crop";
 import getCroppedImg, { dataURLtoFile } from "./Functions/CropAvatarFunc";
 import styles from "./AvatarComponent.module.scss";
@@ -47,7 +47,7 @@ const Avatar = ({imgUrl, onCropped, onShow, show}) => {
 								</div>
 							</>
 					<div className={cx('group-btn')}>
-							<div className={cx('btn-choose')} onClick={handlePreviewImg}>Choose</div>
+							<div className={cx('btn-choose')} onClick={handlePreviewImg}>Upload</div>
 						<div className={cx('btn-cancel')} onClick={handleCancel} >Cancel</div>	
 					</div>
 				</div>
@@ -56,4 +56,4 @@ const Avatar = ({imgUrl, onCropped, onShow, show}) => {
     );
 };
 
-export default Avatar;
+export default memo(Avatar);
