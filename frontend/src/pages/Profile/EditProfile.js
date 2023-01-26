@@ -18,7 +18,10 @@ const EditProfile = ({ onShow }) => {
     const user = useSelector((state) => state.user);
     const [showAvatar, setShowAvatar] = useState(false); 
     const dispatch = useDispatch()
-    const [avatar, setAvatar] = useState();
+    const [avatar, setAvatar] = useState(); 
+    const [previewAvatar, setPreviewAvatar] = useState(imageAPI.getImage(user.user.avatar))
+    const [previewWallpaper, setPreviewWallpaper] = useState(imageAPI.getImage(user.user.profile.wallpaper)) 
+    const [croppedAvatar, setCroppedAvatar] = useState()
     const avatarMutation = useMutation({
         mutationFn: userAPI.uploadAvatar
     })  
@@ -66,7 +69,38 @@ const EditProfile = ({ onShow }) => {
             onSettled: () => {
                 onShow(false)
             }
-        })
+        })  
+
+        if (croppedAvatar) {
+            avatarMutation.mutate({
+                    id: decode._id,
+                    avatar: croppedAvatar
+                }, {
+                    onSuccess: () => {
+                        toast("Upload avatar successfully ! Try login again to update.", {
+                            theme: "dark",
+                            type: "success"
+                        })
+                    },
+                    onError: (err) => {
+                        if (err.response.data.message) {
+                            toast(`Upload avatar failed: ${err.response.data.message}.`, {
+                                theme: "dark",
+                                type: "error"
+                            })
+                        } else {
+                            toast("Upload avatar failed ! Please try again.", {
+                                theme: "dark",
+                                type: "error"
+                            })
+                        }
+                    }, 
+                    onSettled: () => {
+                        setCroppedAvatar(null)
+                    }
+                })
+        } 
+
     };
 
     const handleCancel = () => {
@@ -74,37 +108,45 @@ const EditProfile = ({ onShow }) => {
     };
 
     const handleUploadAvatar = (event) => {
+        if (event.target.files.length === 0 || !event.target.files[0]) return;
         setShowAvatar(true)
         setAvatar(event.target.files[0])
-    } 
+    }  
+
+    const handleUploadWallpaper = (event) => {
+        if (event.target.files.length === 0 || !event.target.files[0]) return;
+        setPreviewWallpaper(URL.createObjectURL(event.target.files[0]))
+    }
 
     const handleCroppedAvatar = (url, file) => { 
         if (url === '' || file === '') return;
-        const decode = jwtDecode(user.accessToken)
-        avatarMutation.mutate({
-            id: decode._id,
-            avatar: file
-        }, {
-            onSuccess: () => {
-                toast("Upload avatar successfully ! Try login again.", {
-                    theme: "dark",
-                    type: "success"
-                })
-            },
-            onError: (err) => {
-                if (err.response.data.message) {
-                    toast(`Upload avatar failed: ${err.response.data.message}.`, {
-                        theme: "dark",
-                        type: "error"
-                    })
-                } else {
-                    toast("Upload avatar failed ! Please try again.", {
-                        theme: "dark",
-                        type: "error"
-                    })
-                }
-            } 
-        })
+        setPreviewAvatar(url) 
+        setCroppedAvatar(file)
+        // const decode = jwtDecode(user.accessToken) 
+        // avatarMutation.mutate({
+        //     id: decode._id,
+        //     avatar: file
+        // }, {
+        //     onSuccess: () => {
+        //         toast("Upload avatar successfully ! Try login again.", {
+        //             theme: "dark",
+        //             type: "success"
+        //         })
+        //     },
+        //     onError: (err) => {
+        //         if (err.response.data.message) {
+        //             toast(`Upload avatar failed: ${err.response.data.message}.`, {
+        //                 theme: "dark",
+        //                 type: "error"
+        //             })
+        //         } else {
+        //             toast("Upload avatar failed ! Please try again.", {
+        //                 theme: "dark",
+        //                 type: "error"
+        //             })
+        //         }
+        //     } 
+        // })
     } 
 
     return (
@@ -114,18 +156,18 @@ const EditProfile = ({ onShow }) => {
                 <div className={cx("image-group")}>
                     <div className={cx("wallpaper-group")}>
                         <img
-                            src={imageAPI.getImage(user.user.profile.wallpaper)}
+                            src={previewWallpaper}
                             alt="edit-form__wallpaper"
                             className={cx("wallpaper")}
                         />
                         <label htmlFor="upload-wallpaper" className={cx("upload-wallpaper")}>
                             <FontAwesomeIcon icon={faCamera} />
                         </label>
-                        <input hidden id="upload-wallpaper" type="file" />
+                        <input hidden id="upload-wallpaper" type="file" onClick={handleUploadWallpaper} />
                     </div>
                     <div className={cx("avatar-group")}>
                         <img
-                            src={!user.user.service ? imageAPI.getImage(user.user.avatar) : user.user.avatar}
+                            src={!user.user.service ? previewAvatar : user.user.avatar}
                             alt="edit-form__avatar"
                             className={cx("avatar")}
                         />

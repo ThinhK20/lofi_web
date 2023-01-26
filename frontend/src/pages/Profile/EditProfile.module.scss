@@ -22,7 +22,6 @@
         width: 100%;
         object-fit: cover;
         object-position: center 45%; 
-        filter: brightness(0.6);
     } 
 
     & .upload-wallpaper {
@@ -117,20 +116,19 @@
         width: 125px;
         height: 125px;
         border-radius: 50%;
-        filter: brightness(0.6);
     } 
 
     & .upload-avatar {
         position: absolute;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        top: 50%;        
+        right: 0;
+        top: 60%;        
         font-size: 2.4rem;
         padding: 12px;
         background-color: rgba(0,0,0, 0.6);
         border-radius: 50%;
         cursor: pointer;  
-        transition: all 0.4s ease;
+        transition: all 0.4s ease; 
+        z-index: 99;
 
         &:hover {
             filter: brightness(0.8);
