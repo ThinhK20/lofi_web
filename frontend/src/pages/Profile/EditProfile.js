@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation } from "@tanstack/react-query";
 import classNames from "classnames/bind";
 import jwtDecode from "jwt-decode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import imageAPI from "~/api/imageAPI";
@@ -21,7 +21,8 @@ const EditProfile = ({ onShow }) => {
     const [avatar, setAvatar] = useState(); 
     const [previewAvatar, setPreviewAvatar] = useState(imageAPI.getImage(user.user.avatar))
     const [previewWallpaper, setPreviewWallpaper] = useState(imageAPI.getImage(user.user.profile.wallpaper)) 
-    const [croppedAvatar, setCroppedAvatar] = useState()
+    const [croppedAvatar, setCroppedAvatar] = useState() 
+    const [wallpaper, setWallpaper] = useState()
     const avatarMutation = useMutation({
         mutationFn: userAPI.uploadAvatar
     })  
@@ -109,45 +110,25 @@ const EditProfile = ({ onShow }) => {
 
     const handleUploadAvatar = (event) => {
         if (event.target.files.length === 0 || !event.target.files[0]) return;
-        setShowAvatar(true)
         setAvatar(event.target.files[0])
+        setShowAvatar(true)
     }  
 
     const handleUploadWallpaper = (event) => {
         if (event.target.files.length === 0 || !event.target.files[0]) return;
-        setPreviewWallpaper(URL.createObjectURL(event.target.files[0]))
+        setPreviewWallpaper(() => URL.createObjectURL(event.target.files[0]))
+        setWallpaper(event.target.files[0])
     }
 
     const handleCroppedAvatar = (url, file) => { 
         if (url === '' || file === '') return;
         setPreviewAvatar(url) 
         setCroppedAvatar(file)
-        // const decode = jwtDecode(user.accessToken) 
-        // avatarMutation.mutate({
-        //     id: decode._id,
-        //     avatar: file
-        // }, {
-        //     onSuccess: () => {
-        //         toast("Upload avatar successfully ! Try login again.", {
-        //             theme: "dark",
-        //             type: "success"
-        //         })
-        //     },
-        //     onError: (err) => {
-        //         if (err.response.data.message) {
-        //             toast(`Upload avatar failed: ${err.response.data.message}.`, {
-        //                 theme: "dark",
-        //                 type: "error"
-        //             })
-        //         } else {
-        //             toast("Upload avatar failed ! Please try again.", {
-        //                 theme: "dark",
-        //                 type: "error"
-        //             })
-        //         }
-        //     } 
-        // })
     } 
+
+    useEffect(() => {
+        console.log("Wallpaper: ", wallpaper)
+    })
 
     return (
         <div className={cx("container")}>
@@ -163,7 +144,7 @@ const EditProfile = ({ onShow }) => {
                         <label htmlFor="upload-wallpaper" className={cx("upload-wallpaper")}>
                             <FontAwesomeIcon icon={faCamera} />
                         </label>
-                        <input hidden id="upload-wallpaper" type="file" onClick={handleUploadWallpaper} />
+                        <input hidden id="upload-wallpaper" type="file" onChange={handleUploadWallpaper} />
                     </div>
                     <div className={cx("avatar-group")}>
                         <img
