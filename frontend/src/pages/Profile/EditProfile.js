@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import imageAPI from "~/api/imageAPI";
 import userAPI from "~/api/userAPI";
 import Avatar from "~/components/layout/components/Avatar";
+import Wallpaper from "~/components/layout/components/Wallpaper";
 import { setUserProfileInfo } from "~/components/Redux/userSlice";
 import styles from "./EditProfile.module.scss";
 
@@ -16,22 +17,34 @@ const cx = classNames.bind(styles);
 
 const EditProfile = ({ onShow }) => {
     const user = useSelector((state) => state.user);
-    const [showAvatar, setShowAvatar] = useState(false); 
     const dispatch = useDispatch()
+
+    // Avatar
+    const [showAvatar, setShowAvatar] = useState(false); 
     const [avatar, setAvatar] = useState(); 
     const [previewAvatar, setPreviewAvatar] = useState(imageAPI.getImage(user.user.avatar))
-    const [previewWallpaper, setPreviewWallpaper] = useState(imageAPI.getImage(user.user.profile.wallpaper)) 
     const [croppedAvatar, setCroppedAvatar] = useState() 
-    const [wallpaper, setWallpaper] = useState()
+    
+    // Wallpaper
+    const [showWallpaper, setShowWallpaper] = useState(false)  
+    const [wallpaper, setWallpaper] = useState() 
+    const [previewWallpaper, setPreviewWallpaper] = useState(imageAPI.getImage(user.user.profile.wallpaper)) 
+    const [croppedWallpaper, setCroppedWallpaper] = useState()
+
+    // Mutation
     const avatarMutation = useMutation({
         mutationFn: userAPI.uploadAvatar
     })  
 
     const profileInfoMutation = useMutation({
         mutationFn: userAPI.updateProfileInfo
+    }) 
+
+    const wallpaperMutation = useMutation({
+        mutationFn: userAPI.uploadWallpaper
     })
 
-
+    // Functions
 
     const handleSubmit = (event) => {
         event.preventDefault();  
@@ -49,7 +62,7 @@ const EditProfile = ({ onShow }) => {
         profileInfoMutation.mutate(submitData, {
             onSuccess: () => { 
                 dispatch(setUserProfileInfo(submitData))
-                toast("Update profile successfully !", {
+                toast("Successfully !. Please login again to update the change. ", {
                     theme: "dark",
                     type: "success"
                 })
@@ -100,8 +113,37 @@ const EditProfile = ({ onShow }) => {
                         setCroppedAvatar(null)
                     }
                 })
-        } 
+        }   
 
+        if (croppedWallpaper) {
+            wallpaperMutation.mutate({
+                id: decode._id,
+                wallpaper: croppedWallpaper
+            }, {
+                onSuccess: () => {
+                    toast("Upload wallpaper successfully ! Try login again to update.", {
+                        theme: "dark",
+                        type: "success"
+                    })
+                },
+                onError: (err) => {
+                    if (err.response.data.message) {
+                        toast(`Upload wallpaper failed: ${err.response.data.message}.`, {
+                            theme: "dark",
+                            type: "error"
+                        })
+                    } else {
+                        toast("Upload wallpaper failed ! Please try again.", {
+                            theme: "dark",
+                            type: "error"
+                        })
+                    }
+                }, 
+                onSettled: () => {
+                    setCroppedWallpaper(null)
+                }
+            })
+        }
     };
 
     const handleCancel = () => {
@@ -116,8 +158,8 @@ const EditProfile = ({ onShow }) => {
 
     const handleUploadWallpaper = (event) => {
         if (event.target.files.length === 0 || !event.target.files[0]) return;
-        setPreviewWallpaper(() => URL.createObjectURL(event.target.files[0]))
         setWallpaper(event.target.files[0])
+        setShowWallpaper(true)
     }
 
     const handleCroppedAvatar = (url, file) => { 
@@ -126,9 +168,11 @@ const EditProfile = ({ onShow }) => {
         setCroppedAvatar(file)
     } 
 
-    useEffect(() => {
-        console.log("Wallpaper: ", wallpaper)
-    })
+    const handleCroppedWallpaper = (url, file) => {
+        if (url === '' || file === '') return; 
+        setPreviewWallpaper(url)
+        setCroppedWallpaper(file)
+    }
 
     return (
         <div className={cx("container")}>
@@ -145,6 +189,14 @@ const EditProfile = ({ onShow }) => {
                             <FontAwesomeIcon icon={faCamera} />
                         </label>
                         <input hidden id="upload-wallpaper" type="file" onChange={handleUploadWallpaper} />
+                        {showWallpaper && (
+                            <Wallpaper
+                                imgUrl={URL.createObjectURL(wallpaper)}
+                                show={showWallpaper}
+                                onShow={setShowWallpaper}
+                                onCropped={handleCroppedWallpaper}
+                            />
+                        )}
                     </div>
                     <div className={cx("avatar-group")}>
                         <img
