@@ -1,18 +1,22 @@
-import axios from "axios"
-const uploadQuery = "http://localhost:8000/v1/video/upload" 
-const getVideosQuery = "http://localhost:8000/v1/video/topic/" 
-const getVideoQuery = "http://localhost:8000/v1/video/"
+import axios from "axios";
+const uploadQuery = "http://localhost:8000/v1/video/upload";
+const getVideosQuery = "http://localhost:8000/v1/video/topic/";
+const getVideoQuery = "http://localhost:8000/v1/video/";
 
-const videoAPI = { 
-    uploadVideo: async(data) => {
-        return await axios.post(uploadQuery, data)
+const videoAPI = {
+    uploadVideo: async (data) => {
+        return await axios.post(uploadQuery, data);
     },
-    getVideosFromTopic: async(topic) => {
-        return await axios.get(getVideosQuery + topic) 
+    getVideoUrlsFromTopic: async (topic) => {
+        const videoURLs = await axios.get(getVideosQuery + topic);
+        return videoURLs.data;
     },
-    getVideo: (videoName) => {
-        return getVideoQuery + videoName
-    }
-}
+    getVideo: async (videoName) => {
+        const videos = await axios.get(getVideoQuery + videoName, {
+            responseType: "blob",
+        });
+        if (videos) return videos.data;
+    },
+};
 
-export default videoAPI
+export default videoAPI;

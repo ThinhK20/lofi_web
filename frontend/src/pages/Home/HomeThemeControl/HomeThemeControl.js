@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useEffect, useRef, useState } from "react";
-import {  images } from "~/assets";
+import { images } from "~/assets";
 import classNames from "classnames/bind";
 
 import styles from "./HomeThemeControl.module.scss";
@@ -12,20 +13,18 @@ const cx = classNames.bind(styles);
 
 function HomeThemeControl() {
     const [playing, setPlaying] = useState(false);
-    const dispatch = useDispatch()
-    const {currentSongId, mutedAudio, audioVolume } = useSelector((state) => state.general);   
-    const { audioSongs } = useSelector((state) => state.audioStorage)
-
- 
+    const dispatch = useDispatch();
+    const { currentSongId, mutedAudio, audioVolume } = useSelector((state) => state.general);
+    const { audioSongs } = useSelector((state) => state.audioStorage);
 
     const { data: audioResponse, isSuccess: isAudioSuccess } = useQuery({
         queryKey: ["audioWithoutNoiseData"],
         queryFn: () => audioAPI.getAllAudioWithoutNoise(),
         keepPreviousData: true,
         staleTime: Infinity,
-    });     
+    });
 
-    const handlePlaySong = () => { 
+    const handlePlaySong = () => {
         setPlaying(() => true);
     };
 
@@ -33,95 +32,97 @@ function HomeThemeControl() {
         setPlaying(() => false);
     };
 
-    const handleNextSong = () => { 
+    const handleNextSong = () => {
         if (currentSongId >= audioResponse.data.length - 1) {
-            dispatch(setCurrentSongId(0))
+            dispatch(setCurrentSongId(0));
         } else {
-            dispatch(setCurrentSongId(currentSongId + 1))
+            dispatch(setCurrentSongId(currentSongId + 1));
         }
-
     };
 
-    const handleBackSong = () => { 
-
+    const handleBackSong = () => {
         if (currentSongId === 0) {
-            dispatch(setCurrentSongId(audioResponse.data.length - 1))
-        }  else {
-            dispatch(setCurrentSongId(currentSongId - 1))
+            dispatch(setCurrentSongId(audioResponse.data.length - 1));
+        } else {
+            dispatch(setCurrentSongId(currentSongId - 1));
         }
-    };  
+    };
 
     // when the user clicked next or prev song
     useEffect(() => {
         if (isAudioSuccess && playing) {
             audioSongs.forEach((song, id) => {
                 if (id === currentSongId) {
-                    song.audio.play()
+                    song.audio.play();
                 } else {
-                    song.audio.pause()
+                    song.audio.pause();
                 }
-            })
-        } 
-    }, [currentSongId, isAudioSuccess]) 
+            });
+        }
+    }, [currentSongId, isAudioSuccess]);
 
     useEffect(() => {
         if (isAudioSuccess) {
-            if (playing) {  
-                audioSongs[currentSongId]?.audio?.play()
+            if (playing) {
+                audioSongs[currentSongId]?.audio?.play();
             } else {
-                audioSongs[currentSongId]?.audio?.pause()
+                audioSongs[currentSongId]?.audio?.pause();
             }
         }
-    }, [playing])
+    }, [playing]);
 
     useEffect(() => {
         if (isAudioSuccess) {
             audioSongs.forEach((song) => {
-                song.audio.muted = mutedAudio
-            })
+                song.audio.muted = mutedAudio;
+            });
         }
-    }, [mutedAudio]) 
+    }, [mutedAudio]);
 
     useEffect(() => {
         if (isAudioSuccess) {
             audioSongs.forEach((song) => {
-                song.audio.volume = audioVolume
-            })
+                song.audio.volume = audioVolume;
+            });
         }
-    }, [audioVolume])  
+    }, [audioVolume]);
 
     useEffect(() => {
         if (isAudioSuccess && audioSongs.length === 0) {
-            dispatch(updateSongStorage(audioResponse.data.map((song) => {
-                return {
-                    ...song, 
-                    audio: (() => {
-                        const newAudio = new Audio(audioAPI.renderAudio(song.audioName))
-                        newAudio.loop = true
-                        return newAudio 
-                    })()
-                }
-            })))
+            dispatch(
+                updateSongStorage(
+                    audioResponse.data.map((song) => {
+                        return {
+                            ...song,
+                            audio: (() => {
+                                const newAudio = new Audio(audioAPI.renderAudio(song.audioName));
+                                newAudio.loop = true;
+                                return newAudio;
+                            })(),
+                        };
+                    }),
+                ),
+            );
         }
-    }, [isAudioSuccess])
+    }, [isAudioSuccess]);
 
     useEffect(() => {
         return () => {
             if (isAudioSuccess) {
-                audioSongs[currentSongId]?.audio?.pause()
+                audioSongs[currentSongId]?.audio?.pause();
             }
-        }
-    }, [])
-
+        };
+    }, []);
 
     return (
-        <> 
-            {
-                isAudioSuccess &&
-                <>  
-                    <h1 className={cx("current-song-name__text")}>Song name: {audioResponse.data[currentSongId].caption}</h1>
+        <>
+            {isAudioSuccess && (
+                <>
+                    <h1 className={cx("current-song-name__text")}>
+                        Song name: {audioResponse.data[currentSongId].caption}
+                    </h1>
                 </>
-            }
+            )}
 
             <div className={cx("music-player-control")}>
                 <div className={cx("music-btn")} onClick={handleBackSong}>

@@ -3,13 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
     dateState: new Date(),
     activeDateWidget: false,
-    theme: 'light',
+    theme: "light",
     rain: false,
     audioVolume: 1,
     mutedAudio: false,
     currentSongId: 0,
-    currentScenes: 'chill-vibes'
-}
+    currentScenes: "chill-vibes",
+};
 
 const generalSlice = createSlice({
     name: "general",
@@ -29,19 +29,28 @@ const generalSlice = createSlice({
         },
         setVolume(state, action) {
             state.audioVolume = action.payload;
-        }, 
+        },
         setMutedAudio(state, action) {
-            state.mutedAudio = action.payload
+            state.mutedAudio = action.payload;
         },
         setCurrentSongId(state, action) {
-            state.currentSongId = action.payload
+            state.currentSongId = action.payload;
         },
         setCurrentScenes(state, action) {
-            state.currentScenes = action.payload
-        }
+            state.currentScenes = action.payload;
+        },
     },
 });
 
 const { actions } = generalSlice;
-export const { updateDate, setCurrentScenes, setActiveDateWidget, setTheme, setRain, setVolume, setMutedAudio, setCurrentSongId } = actions;
+export const {
+    updateDate,
+    setCurrentScenes,
+    setActiveDateWidget,
+    setTheme,
+    setRain,
+    setVolume,
+    setMutedAudio,
+    setCurrentSongId,
+} = actions;
 export default generalSlice.reducer;

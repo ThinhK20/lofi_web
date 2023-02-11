@@ -25,7 +25,7 @@ function Profile() {
             {user && (
                 <div className={cx("wrapper", theme === "light" && "dark")}>
                     <img
-                        loading="lazy"
+                        loading="eager"
                         alt="wallpaper"
                         width={"100%"}
                         height={300}
