@@ -98,7 +98,6 @@ const imageController = {
             );
          });
       } catch (err) {
-         console.log("WTF wrong in here: ", err);
          next(err);
       }
    },

@@ -50,22 +50,22 @@ const HomeBackground = () => {
             {!videos && isLoading && <Loading />}
             <>
                 <VideoComponent
-                    srcVideo={videos[currentScenes]?.["day-sunny"]}
+                    srcVideo={videos?.[currentScenes]?.["day-sunny"]}
                     themeCondition="light"
                     rainCondition={false}
                 />
                 <VideoComponent
-                    srcVideo={videos[currentScenes]?.["day-rainny"]}
+                    srcVideo={videos?.[currentScenes]?.["day-rainny"]}
                     themeCondition="light"
                     rainCondition={true}
                 />
                 <VideoComponent
-                    srcVideo={videos[currentScenes]?.["night-clear"]}
+                    srcVideo={videos?.[currentScenes]?.["night-clear"]}
                     themeCondition="dark"
                     rainCondition={false}
                 />
                 <VideoComponent
-                    srcVideo={videos[currentScenes]?.["night-rainny"]}
+                    srcVideo={videos?.[currentScenes]?.["night-rainny"]}
                     themeCondition="dark"
                     rainCondition={true}
                 />

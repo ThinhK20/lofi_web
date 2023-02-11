@@ -72,6 +72,7 @@ const authController = {
             return res.status(500).json("Password is not correct !");
          }
          const accessToken = authController.generateAccessToken(user);
+
          const { password, _id, admin, ...userDTO } = user._doc;
          return res.status(200).json({
             user: userDTO,
