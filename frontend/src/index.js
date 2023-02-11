@@ -4,21 +4,21 @@ import App from "./App";
 import GlobalStyles from "~/components/GlobalStyles";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
-import store from "./components/Redux/store"; 
+import store from "./components/Redux/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <React.StrictMode>  
-            <QueryClientProvider client={queryClient}>
-                <Provider store={store}>
-                    <GlobalStyles>
-                        <App />
-                    </GlobalStyles>
-                </Provider>
-            </QueryClientProvider>
+    <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <Provider store={store}>
+                <GlobalStyles>
+                    <App />
+                </GlobalStyles>
+            </Provider>
+        </QueryClientProvider>
     </React.StrictMode>,
 );
 

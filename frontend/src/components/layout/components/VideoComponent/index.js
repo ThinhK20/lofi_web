@@ -20,7 +20,7 @@ const VideoComponent = ({ srcVideo, themeCondition, rainCondition }) => {
         <>
             {srcVideo && (
                 <>
-                    {isLoading && <Loading />}
+                    {checkShowVideo && isLoading && <Loading />}
                     <video
                         className={cx("video-background", checkShowVideo && "opacity-1")}
                         src={srcVideo}

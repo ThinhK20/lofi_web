@@ -22,10 +22,6 @@ const app = express();
 
 app.use(cors());
 
-mongoose.connect(process.env.MONGOOSE_URL, () => {
-   console.log("Connected to database");
-});
-
 app.use(morgan("combined"));
 app.use(cookieParser());
 app.use(express.json());
@@ -53,6 +49,17 @@ app.use("/v1/user", userRouter);
 app.use(NotFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-app.listen(8000, () => {
-   console.log("Server is running at http://localhost:8000");
-});
+const startServer = async () => {
+   try {
+      await mongoose.connect(process.env.MONGOOSE_URL, () => {
+         console.log("Connected to database");
+         app.listen(8000, () => {
+            console.log("Server is running at http://localhost:8000");
+         });
+      });
+   } catch (err) {
+      console.log(err);
+   }
+};
+
+startServer();

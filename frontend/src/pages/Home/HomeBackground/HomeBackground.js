@@ -16,7 +16,6 @@ const HomeBackground = () => {
     } = useQuery({
         queryKey: ["videoData", currentScenes],
         queryFn: () => videoAPI.getVideoUrlsFromTopic(currentScenes),
-        keepPreviousData: true,
         staleTime: Infinity,
     });
 
@@ -47,7 +46,7 @@ const HomeBackground = () => {
 
     return (
         <>
-            {!videos && isLoading && <Loading />}
+            {(isLoading || !videos || !videos?.[currentScenes]) && <Loading />}
             <>
                 <VideoComponent
                     srcVideo={videos?.[currentScenes]?.["day-sunny"]}

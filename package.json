@@ -1,0 +1,25 @@
+{
+  "name": "lofi-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "client": "npm start --prefix frontend",
+    "server": "npm start --prefix backend --ignore frontend",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThinhK20/lofi_web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThinhK20/lofi_web/issues"
+  },
+  "homepage": "https://github.com/ThinhK20/lofi_web#readme",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
