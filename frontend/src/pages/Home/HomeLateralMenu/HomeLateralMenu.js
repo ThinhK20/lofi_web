@@ -17,7 +17,7 @@ import {
     faVolumeHigh,
     faVolumeMute,
 } from "@fortawesome/free-solid-svg-icons";
-import { memo, useEffect,  useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import Tippy from "@tippyjs/react/headless"; // different import path!
 import { images } from "~/assets";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,9 +34,9 @@ function HomeLateralMenu() {
         queryFn: () => audioAPI.getAllAudioWithoutNoise(),
         keepPreviousData: true,
         staleTime: Infinity,
-    });  
+    });
 
-    const { audioNoises } = useSelector(state => state.audioStorage)
+    const { audioNoises } = useSelector((state) => state.audioStorage);
 
     const { data: audioNoiseResponse, isSuccess: isAudioNoiseSuccess } = useQuery({
         queryKey: ["audioNoiseData"],
@@ -45,21 +45,20 @@ function HomeLateralMenu() {
         staleTime: Infinity,
     });
 
-
     const optionsElement = useRef();
     const [tippyIndexs, setTippyIndexs] = useState([false, false, false, false]);
     const dispatch = useDispatch();
-    const { mutedAudio, currentSongId, rain, currentScenes } = useSelector((state) => state.general); 
+    const { mutedAudio, currentSongId, rain, currentScenes } = useSelector((state) => state.general);
 
     const handleNoise = (e, index) => {
         const value = e.target.value / 100;
-        audioNoises[index].audio.volume = value ;
+        audioNoises[index].audio.volume = value;
         if (value === 0) {
-            audioNoises[index].audio.pause()
+            audioNoises[index].audio.pause();
         } else {
-            audioNoises[index].audio.play()
+            audioNoises[index].audio.play();
         }
-    } 
+    };
 
     const handleShowMenu = (e) => {
         let eTarget = e.target;
@@ -114,64 +113,67 @@ function HomeLateralMenu() {
 
     useEffect(() => {
         if (isAudioNoiseSuccess) {
-            const rainNoise = audioNoises.find(x => x.caption === 'rain-city')?.audio
-            if (rain) { 
+            const rainNoise = audioNoises.find((x) => x.caption === "rain-city")?.audio;
+            if (rain) {
                 if (rainNoise) {
-                    rainNoise.volume = 1
-                    rainNoise?.play()
+                    rainNoise.volume = 1;
+                    rainNoise?.play();
                 }
             } else {
                 if (rainNoise) {
-                    rainNoise?.pause()
+                    rainNoise?.pause();
                 }
             }
         }
-    }, [rain]) 
-
-    useEffect(() => { 
-        if (isAudioNoiseSuccess) {
-            audioNoises.forEach((noise) => {
-                noise.audio.muted = mutedAudio
-            })
-        }
-    }, [mutedAudio])  
+    }, [rain]);
 
     useEffect(() => {
-        if (isAudioNoiseSuccess && audioNoises.length === 0) { 
-            dispatch(updateNoiseStorage(audioNoiseResponse.data.map((noise) => {
-                return {
-                    ...noise,
-                    name: noise.caption
-                        .split("-")
-                        .map((ch) => ch.charAt(0).toUpperCase() + ch.slice(1))
-                        .join(" "),
-                    audio: (() => {
-                        const newAudio = new Audio(audioAPI.renderAudio(noise.audioName))
-                        newAudio.loop = true
-                        return newAudio 
-                    })()
-                };
-            })))
+        if (isAudioNoiseSuccess) {
+            audioNoises.forEach((noise) => {
+                noise.audio.muted = mutedAudio;
+            });
         }
-    }, [isAudioNoiseSuccess])  
+    }, [mutedAudio]);
+
+    useEffect(() => {
+        if (isAudioNoiseSuccess && audioNoises.length === 0) {
+            dispatch(
+                updateNoiseStorage(
+                    audioNoiseResponse.data.map((noise) => {
+                        return {
+                            ...noise,
+                            name: noise.caption
+                                .split("-")
+                                .map((ch) => ch.charAt(0).toUpperCase() + ch.slice(1))
+                                .join(" "),
+                            audio: (() => {
+                                const newAudio = new Audio(audioAPI.renderAudio(noise.audioName));
+                                newAudio.loop = true;
+                                return newAudio;
+                            })(),
+                        };
+                    }),
+                ),
+            );
+        }
+    }, [isAudioNoiseSuccess]);
 
     useEffect(() => {
         return () => {
             if (isAudioNoiseSuccess) {
                 audioNoises.forEach((noise) => {
-                    noise.audio.pause()
-                })
+                    noise.audio.pause();
+                });
             }
-        }
-    }, [])
+        };
+    }, []);
 
-    const handleScenes = (event) => { 
-        const value = event.target.getAttribute("value")
-        if (currentScenes !== value) {  
-            dispatch(setCurrentScenes(value))
-        } 
-    }
-   
+    const handleScenes = (event) => {
+        const value = event.target.getAttribute("value");
+        if (currentScenes !== value) {
+            dispatch(setCurrentScenes(value));
+        }
+    };
 
     return (
         <div className={cx("wrapper")}>
@@ -238,43 +240,41 @@ function HomeLateralMenu() {
                                             return (
                                                 <div className={cx("noise-sound-item")} key={index}>
                                                     <span className={cx("noise-sound-name")}>{noise.name}</span>
-                                                    {noise.caption === 'rain-city' ? 
-                                                            <> 
-                                                                {rain ? 
-                                                                    <Slider
+                                                    {noise.caption === "rain-city" ? (
+                                                        <>
+                                                            {rain ? (
+                                                                <Slider
                                                                     valueLabelDisplay="auto"
                                                                     min={0}
                                                                     max={100}
-                                                                    defaultValue={100} 
+                                                                    defaultValue={100}
                                                                     onChange={(e) => handleNoise(e, index)}
                                                                     className={cx("noise-sound-slider")}
-                                                                    />
-                                                                :  
+                                                                />
+                                                            ) : (
                                                                 <>
                                                                     <span>{rain}</span>
                                                                     <Slider
                                                                         valueLabelDisplay="auto"
                                                                         min={0}
                                                                         max={100}
-                                                                        defaultValue={0} 
+                                                                        defaultValue={0}
                                                                         onChange={(e) => handleNoise(e, index)}
                                                                         className={cx("noise-sound-slider")}
-                                                                        />
-                                                                
+                                                                    />
                                                                 </>
-                                                                }
-                                                            </>
-                                                        :
-
+                                                            )}
+                                                        </>
+                                                    ) : (
                                                         <Slider
                                                             valueLabelDisplay="auto"
                                                             min={0}
                                                             max={100}
-                                                            defaultValue={0} 
+                                                            defaultValue={0}
                                                             onChange={(e) => handleNoise(e, index)}
                                                             className={cx("noise-sound-slider")}
                                                         />
-                                                    }
+                                                    )}
                                                 </div>
                                             );
                                         })}
@@ -386,10 +386,9 @@ function HomeLateralMenu() {
                                     <img
                                         className={cx("scene-background")}
                                         src={images.scenes_background_chillVipe}
-                                        alt="scenes-background"  
+                                        alt="scenes-background"
                                         onClick={handleScenes}
                                         value="chill-vibes"
-
                                     />
                                     <img
                                         className={cx("scene-background")}
@@ -398,85 +397,90 @@ function HomeLateralMenu() {
                                         onClick={handleScenes}
                                         value="seoul-city"
                                     />
-                                    <div className={cx("scene-overlay__update-soon")}> 
-                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                    <img
+                                        className={cx("scene-background")}
+                                        src={images.scenes_background_seoul_cafe}
+                                        alt="scenes-background"
+                                        onClick={handleScenes}
+                                        value="seoul-cafe"
+                                    />
+                                    <div className={cx("scene-overlay__update-soon")}>
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} />
                                         <img
                                             className={cx("scene-background")}
                                             src={images.scenes_background_amidreaming}
                                             alt="scenes-background"
                                         />
-                                    </div> 
-                                    <div className={cx("scene-overlay__update-soon")}> 
-                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                    </div>
+                                    <div className={cx("scene-overlay__update-soon")}>
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} />
                                         <img
                                             className={cx("scene-background")}
                                             src={images.scenes_background_cafe}
                                             alt="scenes-background"
                                         />
-                                    </div> 
-                                    <div className={cx("scene-overlay__update-soon")}> 
-                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                    </div>
+                                    <div className={cx("scene-overlay__update-soon")}>
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} />
                                         <img
                                             className={cx("scene-background")}
                                             src={images.scenes_background_honolulu}
                                             alt="scenes-background"
                                         />
-                                    </div> 
+                                    </div>
 
-                                    <div className={cx("scene-overlay__update-soon")}> 
-                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                    <div className={cx("scene-overlay__update-soon")}>
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} />
                                         <img
                                             className={cx("scene-background")}
                                             src={images.scenes_background_lofiCaffe}
                                             alt="scenes-background"
                                         />
-                                    </div> 
-                                    <div className={cx("scene-overlay__update-soon")}> 
-                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                    </div>
+                                    <div className={cx("scene-overlay__update-soon")}>
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} />
                                         <img
                                             className={cx("scene-background")}
                                             src={images.scenes_background_lofiDesk}
                                             alt="scenes-background"
                                         />
-                                    </div>  
+                                    </div>
 
-                                    <div className={cx("scene-overlay__update-soon")}> 
-                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                    <div className={cx("scene-overlay__update-soon")}>
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} />
                                         <img
-                                        className={cx("scene-background")}
-                                        src={images.scenes_background_springLake}
-                                        alt="scenes-background"
-                                    />
-                                    </div>  
+                                            className={cx("scene-background")}
+                                            src={images.scenes_background_springLake}
+                                            alt="scenes-background"
+                                        />
+                                    </div>
 
-                                    <div className={cx("scene-overlay__update-soon")}> 
-                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                    <div className={cx("scene-overlay__update-soon")}>
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} />
                                         <img
-                                        className={cx("scene-background")}
-                                        src={images.scenes_background_northenLake}
-                                        alt="scenes-background"
-                                    />
-                                    </div>  
+                                            className={cx("scene-background")}
+                                            src={images.scenes_background_northenLake}
+                                            alt="scenes-background"
+                                        />
+                                    </div>
 
-                                    <div className={cx("scene-overlay__update-soon")}> 
-                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                    <div className={cx("scene-overlay__update-soon")}>
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} />
                                         <img
-                                        className={cx("scene-background")}
-                                        src={images.scenes_background_summerDay}
-                                        alt="scenes-background"
-                                    />
-                                    </div>  
-                                  
-                                    <div className={cx("scene-overlay__update-soon")}> 
-                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} /> 
+                                            className={cx("scene-background")}
+                                            src={images.scenes_background_summerDay}
+                                            alt="scenes-background"
+                                        />
+                                    </div>
+
+                                    <div className={cx("scene-overlay__update-soon")}>
+                                        <FontAwesomeIcon className={cx("scene-overlay__keyhole")} icon={faLock} />
                                         <img
-                                        className={cx("scene-background")}
-                                        src={images.scenes_background_vanLife}
-                                        alt="scenes-background"
-                                    />
-                                    </div> 
-                                  
-                                    
+                                            className={cx("scene-background")}
+                                            src={images.scenes_background_vanLife}
+                                            alt="scenes-background"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

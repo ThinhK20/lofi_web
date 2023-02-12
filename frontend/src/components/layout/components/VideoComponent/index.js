@@ -1,22 +1,18 @@
 import classNames from "classnames/bind";
-import { memo, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-import LoadingComponent from "../Loading";
+import { memo, useEffect } from "react";
 import styles from "./VideoComponent.module.scss";
 
 const cx = classNames.bind(styles);
 
-const VideoComponent = ({ srcVideo, themeCondition, rainCondition }) => {
-    const { theme, rain } = useSelector((state) => state.general);
-    const [isLoading, setIsLoading] = useState(true);
-    const checkShowVideo = useMemo(() => {
-        return theme === themeCondition && rainCondition === rain;
-    }, [theme, themeCondition, rainCondition, rain]);
+const VideoComponent = ({ srcVideo, checkShowVideo, onLoading = null }) => {
+    useEffect(() => {
+        if (onLoading) {
+            onLoading(true);
+        }
+    }, [onLoading]);
 
     return (
         <>
-            {(!srcVideo || isLoading) && <LoadingComponent />}
-
             {srcVideo && (
                 <>
                     <video
@@ -25,7 +21,11 @@ const VideoComponent = ({ srcVideo, themeCondition, rainCondition }) => {
                         autoPlay
                         loop
                         muted
-                        onLoadedData={() => setIsLoading(false)}
+                        onLoadedData={() => {
+                            if (onLoading) {
+                                onLoading(false);
+                            }
+                        }}
                     />
                 </>
             )}

@@ -4,7 +4,7 @@ const images = {
     pause: require("~/assets/img/pause.svg").default,
     prev: require("~/assets/img/prevSong.svg").default,
     next: require("~/assets/img/nextSong.svg").default,
-    lofi: require("~/assets/img/logi.svg").default, 
+    lofi: require("~/assets/img/logi.svg").default,
     test_wallpaper: require("~/assets/img/test-wallpaper.jpg"),
     playlists_template1: require("~/assets/img/playlist-template1.svg").default,
     playlists_template2: require("~/assets/img/playlist-template2.svg").default,
@@ -23,15 +23,13 @@ const images = {
     scenes_background_summerDay: require("~/assets/img/scenes-background-summerDay.png"),
     scenes_background_vanLife: require("~/assets/img/scenes-background-vanLife.png"),
     scenes_background_seoul: require("~/assets/img/scenes-background-seoul.png"),
-    
-    maintenance_img: require('~/assets/img/maintenance.gif'),
-    loading_img: require('~/assets/img/loading.gif'),
-    default_avatar: require('~/assets/img/default-avatar.svg').default,
-    anime_dancing: require('~/assets/img/anime-dancing.gif'),
-    matsuri_smiling: require('~/assets/img/matsuri_smiling.gif'),
+    scenes_background_seoul_cafe: require("~/assets/img/scenes-background-seoul-cafe.png"),
 
+    maintenance_img: require("~/assets/img/maintenance.gif"),
+    loading_img: require("~/assets/img/loading.gif"),
+    default_avatar: require("~/assets/img/default-avatar.svg").default,
+    anime_dancing: require("~/assets/img/anime-dancing.gif"),
+    matsuri_smiling: require("~/assets/img/matsuri_smiling.gif"),
 };
-
-
 
 export { images };

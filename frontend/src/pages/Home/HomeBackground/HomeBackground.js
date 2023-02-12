@@ -1,19 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import videoAPI from "~/api/videoAPI";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import VideoComponent from "~/components/layout/components/VideoComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { updateVideoStorage } from "~/components/Redux/videoSlice";
-import Loading from "~/pages/Loading";
+import LoadingComponent from "~/components/layout/components/Loading";
 
 const HomeBackground = () => {
-    const { currentScenes } = useSelector((state) => state.general);
+    const { currentScenes, theme, rain } = useSelector((state) => state.general);
 
-    const {
-        data: videoResponse,
-        isSuccess: isVideoSuccess,
-        isLoading,
-    } = useQuery({
+    const { data: videoResponse, isSuccess: isVideoSuccess } = useQuery({
         queryKey: ["videoData", currentScenes],
         queryFn: () => videoAPI.getVideoUrlsFromTopic(currentScenes),
         staleTime: Infinity,
@@ -44,29 +40,35 @@ const HomeBackground = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVideoSuccess, currentScenes, videoResponse, videos]);
 
+    const checkShowVideo = (themeCondition, rainCondition) => {
+        return theme === themeCondition && rainCondition === rain;
+    };
+
+    const [isLoading, setIsLoadingVideo] = useState(false);
+
     return (
         <>
-            {(isLoading || !videos || !videos?.[currentScenes]) && <Loading />}
+            {(!videos || !videos?.[currentScenes] || isLoading) && <LoadingComponent />}
             <>
                 <VideoComponent
                     srcVideo={videos?.[currentScenes]?.["day-sunny"]}
-                    themeCondition="light"
-                    rainCondition={false}
+                    checkShowVideo={checkShowVideo("light", false)}
+                    onLoading={checkShowVideo("light", false) && setIsLoadingVideo}
                 />
                 <VideoComponent
                     srcVideo={videos?.[currentScenes]?.["day-rainny"]}
-                    themeCondition="light"
-                    rainCondition={true}
+                    checkShowVideo={checkShowVideo("light", true)}
+                    onLoading={checkShowVideo("light", true) && setIsLoadingVideo}
                 />
                 <VideoComponent
                     srcVideo={videos?.[currentScenes]?.["night-clear"]}
-                    themeCondition="dark"
-                    rainCondition={false}
+                    checkShowVideo={checkShowVideo("dark", false)}
+                    onLoading={checkShowVideo("dark", false) && setIsLoadingVideo}
                 />
                 <VideoComponent
                     srcVideo={videos?.[currentScenes]?.["night-rainny"]}
-                    themeCondition="dark"
-                    rainCondition={true}
+                    checkShowVideo={checkShowVideo("dark", true)}
+                    onLoading={checkShowVideo("dark", true) && setIsLoadingVideo}
                 />
             </>
         </>
