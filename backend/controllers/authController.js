@@ -2,7 +2,9 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Image = require("../models/Image");
-const NotImageValid = require("../errors/NotImageValid");
+const NotFoundError = require("../errors/NotFoundError");
+const BadRequestError = require("../errors/BadRequestError");
+const InvalidFileError = require("../errors/InvalidFileError");
 
 const authController = {
    register: async (req, res, next) => {
@@ -12,7 +14,7 @@ const authController = {
             req.file.contentType != "image/png" &&
             req.file.contentType != "image/svg+xml"
          ) {
-            throw new NotImageValid(
+            throw new InvalidFileError(
                "Image type is not valid: " + req.file.contentType,
                req.file.filename
             );
@@ -62,14 +64,14 @@ const authController = {
       try {
          const user = await User.findOne({ username: req.body.username });
          if (!user) {
-            return res.status(500).json("Bad request!");
+            throw new NotFoundError("This account doesn't exists !");
          }
          const passwordEncode = await bcrypt.compareSync(
             req.body.password,
             user.password
          );
          if (!passwordEncode) {
-            return res.status(500).json("Password is not correct !");
+            throw new BadRequestError("The password is incorrect !");
          }
          const accessToken = authController.generateAccessToken(user);
 
@@ -82,28 +84,28 @@ const authController = {
          next(err);
       }
    },
-   delete: async (req, res) => {
+   delete: async (req, res, next) => {
       try {
          const user = await User.findById(req.params.id);
          if (!user) {
-            return res.status(500).json("User is not exist !");
+            throw new NotFoundError("The user doesn't exists !");
          }
          return res.status(200).json("Deleted successfully !");
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
-   verifyUser: async (req, res) => {
+   verifyUser: async (req, res, next) => {
       try {
          const user = await User.findOne({ email: req.params.email });
          if (!user) {
-            return res.status(500).json("User is not exist !");
+            throw new NotFoundError("User doesn't exists !");
          }
          user.verified = true;
          await user.save();
          return res.status(200).json("Verified successfully !");
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
 };

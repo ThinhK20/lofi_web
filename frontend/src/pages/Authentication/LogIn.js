@@ -8,58 +8,65 @@ import { useMutation } from "@tanstack/react-query";
 import authAPI from "~/api/authAPI";
 import { useDispatch } from "react-redux";
 import { setUserData } from "~/components/Redux/userSlice";
-import emailAPI from "~/api/emailAPI";  
+import emailAPI from "~/api/emailAPI";
 import GoogleAuthentication from "~/components/layout/components/GoogleAuthentication/GoogleAuthentication";
+import { useState } from "react";
 
 const cx = classNames.bind(styles);
 
-function Login() {   
+function Login() {
+    const [errorMsg, setErrorMsg] = useState("");
 
     const { mutate } = useMutation({
-        mutationFn: authAPI.loginUser
-    })  
+        mutationFn: authAPI.loginUser,
+    });
 
-    const { mutate : mutateSendVerifyEmail } = useMutation({
-        mutationFn: emailAPI.verifyAccount
-    }) 
+    const { mutate: mutateSendVerifyEmail } = useMutation({
+        mutationFn: emailAPI.verifyAccount,
+    });
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target); 
-        mutate({ 
-            username: formData.get('username'), 
-            password: formData.get('password')
-        }, {
-            onSuccess: (data) => {
-                if (!data.data.user.verified) {
-                    mutateSendVerifyEmail({
-                        email: data.data.user.email
-                    }, {
-                        onSuccess: (res) => {
-                            navigate('/verifyAccount', {
-                                state: {
-                                    userData: data.data,
-                                    verifyCode: res.data.data
-                                }
-                            })
-                           
-                        }   
-                    })
-
-
-                  
-                } else {
-                    dispatch(setUserData(data.data))   
-                    navigate('/')
-                }
-            }
-        })
-    }
-
+        const formData = new FormData(e.target);
+        mutate(
+            {
+                username: formData.get("username"),
+                password: formData.get("password"),
+            },
+            {
+                onSuccess: (data) => {
+                    setErrorMsg("");
+                    if (!data.data.user.verified) {
+                        mutateSendVerifyEmail(
+                            {
+                                email: data.data.user.email,
+                            },
+                            {
+                                onSuccess: (res) => {
+                                    navigate("/verifyAccount", {
+                                        state: {
+                                            userData: data.data,
+                                            verifyCode: res.data.data,
+                                        },
+                                    });
+                                },
+                            },
+                        );
+                    } else {
+                        dispatch(setUserData(data.data));
+                        navigate("/");
+                    }
+                },
+                onError: (error) => {
+                    setErrorMsg(error.response.data.msg);
+                },
+            },
+        );
+    };
 
     return (
         <div className={cx("wrapper")}>
@@ -70,28 +77,19 @@ function Login() {
                     <h2 className={cx("heading-content")}>Log In to your account.</h2>
                 </div>
                 <form className={cx("form")} onSubmit={handleSubmit}>
+                    <span className={cx("error-msg")}>{errorMsg}</span>
                     <div className={cx("input-box")}>
                         <div className={cx("input-item")}>
                             <label htmlFor="username" className={cx("input-label")}>
                                 Username
                             </label>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                className={cx("input")}
-                            />
+                            <input type="text" id="username" name="username" className={cx("input")} />
                         </div>
                         <div className={cx("input-item")}>
                             <label htmlFor="password" className={cx("input-label")}>
                                 Password
                             </label>
-                            <input
-                                type="password"
-                                id="password" 
-                                name="password"
-                                className={cx("input")}
-                            />
+                            <input type="password" id="password" name="password" className={cx("input")} />
                         </div>
                     </div>
                     <h4 className={cx("policy-text")}>
@@ -109,8 +107,8 @@ function Login() {
                         Sign up for free
                     </Link>
                 </footer>
-            </div> 
-            <GoogleAuthentication/>
+            </div>
+            <GoogleAuthentication />
             <Link to={"/"} className={cx("back-menu")}>
                 <FontAwesomeIcon icon={faChevronLeft} className={cx("back-icon")} />
                 <h3 className={cx("back-content")}>Back to Home</h3>

@@ -66,7 +66,7 @@ function Profile() {
                                         href={user.user.profile.facebook}
                                         className={cx("text-content")}
                                     >
-                                        {user.user.lofiUsername}
+                                        {user.user.profile.facebook !== "" && <>{user.user.lofiUsername}</>}
                                     </a>
                                 </div>
                                 <div className={cx("inner-row-item")}>

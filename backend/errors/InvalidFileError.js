@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const CustomAPIError = require("./CustomAPIError");
 
-class NotImageValid extends CustomAPIError {
+class InvalidFileError extends CustomAPIError {
    constructor(message, filename) {
       super(message);
       this.statusCode = StatusCodes.NOT_ACCEPTABLE;
@@ -9,4 +9,4 @@ class NotImageValid extends CustomAPIError {
    }
 }
 
-module.exports = NotImageValid;
+module.exports = InvalidFileError;

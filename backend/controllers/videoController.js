@@ -1,4 +1,8 @@
 const mongoose = require("mongoose");
+const BadRequestError = require("../errors/BadRequestError");
+const InvalidFileError = require("../errors/InvalidFileError");
+const NotFoundError = require("../errors/NotFoundError");
+
 const Video = require("../models/Video");
 const variableApp = require("../utils/variable");
 
@@ -16,21 +20,26 @@ connect.once("open", () => {
 });
 
 const videoController = {
-   upload: async (req, res) => {
+   upload: async (req, res, next) => {
       try {
          const existingVideo = await Video.findOne({
             caption: req.body.caption,
             topic: req.body.topic,
          });
-         if (existingVideo)
-            return res.status(200).json("Video already exists !");
+         if (existingVideo) {
+            throw new InvalidFileError(
+               "Video already exists !",
+               req.file.filename
+            );
+         }
          if (
             req.file.contentType != "video/mp4" &&
             req.file.contentType != "video/x-matroska"
          ) {
-            return res
-               .status(403)
-               .json("Video type is not valid: " + req.file.contentType);
+            throw new InvalidFileError(
+               "Video type is not valid: " + req.file.contentType,
+               req.file.filename
+            );
          }
          const newVideo = new Video({
             caption: req.body.caption,
@@ -44,15 +53,15 @@ const videoController = {
             video: newVideo,
          });
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
-   renderVideo: async (req, res) => {
+   renderVideo: async (req, res, next) => {
       try {
          gfs.find({ filename: req.params.videoName }).toArray((err, files) => {
-            if (err) return res.status(500).json(err);
+            if (err) throw new BadRequestError(err);
             if (!files[0] || files.length <= 0) {
-               return res.status(200).json("No files available");
+               throw new NotFoundError("No file available !");
             }
             res.writeHead(200, {
                "Content-Type": "video/mp4",
@@ -64,15 +73,15 @@ const videoController = {
             gfs.openDownloadStreamByName(req.params.videoName).pipe(res);
          });
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
-   getVideosFromTopic: async (req, res) => {
+   getVideosFromTopic: async (req, res, next) => {
       try {
          const videos = await Video.find({ topic: req.params.topic });
          return res.status(200).json(videos);
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
 };
