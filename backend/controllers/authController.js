@@ -43,8 +43,8 @@ const authController = {
             user: { ...userDTO },
          });
       } catch (err) {
-         err.filename = req.file.filename;
-         next(err, req);
+         err.filename = req?.file?.filename;
+         next(err);
       }
    },
    generateAccessToken: (data) => {

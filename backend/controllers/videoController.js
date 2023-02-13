@@ -59,18 +59,22 @@ const videoController = {
    renderVideo: async (req, res, next) => {
       try {
          gfs.find({ filename: req.params.videoName }).toArray((err, files) => {
-            if (err) throw new BadRequestError(err);
-            if (!files[0] || files.length <= 0) {
-               throw new NotFoundError("No file available !");
+            try {
+               if (err) throw new BadRequestError(err);
+               if (!files[0] || files.length <= 0) {
+                  throw new NotFoundError("No file available !");
+               }
+               res.writeHead(200, {
+                  "Content-Type": "video/mp4",
+                  "Accept-Ranges": "bytes",
+                  Connection: "Keep-Alive",
+                  "Transfer-encoding": "chunked",
+                  "Content-Length": files[0].length,
+               });
+               gfs.openDownloadStreamByName(req.params.videoName).pipe(res);
+            } catch (gfsErr) {
+               next(gfsErr);
             }
-            res.writeHead(200, {
-               "Content-Type": "video/mp4",
-               "Accept-Ranges": "bytes",
-               Connection: "Keep-Alive",
-               "Transfer-encoding": "chunked",
-               "Content-Length": files[0].length,
-            });
-            gfs.openDownloadStreamByName(req.params.videoName).pipe(res);
          });
       } catch (err) {
          next(err);

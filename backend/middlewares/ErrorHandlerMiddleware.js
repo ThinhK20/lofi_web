@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const imageController = require("../controllers/imageController");
+const fileController = require("../controllers/fileController");
 const errorHandlerMiddleware = (err, req, res, next) => {
    const defaultError = {
       statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
@@ -16,7 +16,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
    if (err.filename) {
       req.params.filename = err.filename;
       req.error = true;
-      imageController.deleteFileFromFileName(req, res);
+      fileController.deleteFileFromFileName(req);
    }
 
    if (err.code && err.code === 11000) {

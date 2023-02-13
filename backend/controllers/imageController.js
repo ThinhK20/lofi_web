@@ -1,5 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const mongoose = require("mongoose");
+const BadRequestError = require("../errors/BadRequestError");
+const InvalidFileError = require("../errors/InvalidFileError");
 const NotFoundError = require("../errors/NotFoundError");
 const Image = require("../models/Image");
 const variableApp = require("../utils/variable");
@@ -18,19 +20,24 @@ connect.once("open", () => {
 });
 
 const imageController = {
-   upload: async (req, res) => {
+   upload: async (req, res, next) => {
       try {
          const image = await Image.findOne({ caption: req.body.caption });
-         if (image) return res.status(200).json("Image already exists !");
+         if (image)
+            throw new InvalidFileError(
+               "Image already exists",
+               req.file.filename
+            );
 
          if (
             req.file.contentType != "image/jpeg" &&
             req.file.contentType != "image/png" &&
             req.file.contentType != "image/svg+xml"
          ) {
-            return res
-               .status(403)
-               .json("Image type is not valid: " + req.file.contentType);
+            throw new InvalidFileError(
+               "Image type is not valid: " + req.file.contentType,
+               req.file.filename
+            );
          }
          const newImage = new Image({
             caption: req.body.caption,
@@ -39,63 +46,74 @@ const imageController = {
          });
          await newImage.save();
          return res.status(200).json({
-            message: "Upload image successfully",
+            msg: "Upload image successfully",
             image: newImage,
          });
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
    // /image/:imageName
-   renderImage: async (req, res) => {
+   renderImage: async (req, res, next) => {
       try {
          gfs.find({ filename: req.params.imageName }).toArray((err, files) => {
-            if (err) return res.status(500).json(err);
-            if (!files[0] || files.length <= 0) {
-               return res.status(200).json("No files available");
+            try {
+               if (err)
+                  throw new BadRequestError("There's an error occurs: " + err);
+               if (!files[0] || files.length <= 0) {
+                  throw new NotFoundError("No file available.");
+               }
+               gfs.openDownloadStreamByName(req.params.imageName).pipe(res);
+            } catch (gfsError) {
+               next(gfsError);
             }
-            gfs.openDownloadStreamByName(req.params.imageName).pipe(res);
          });
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
-   deleteFileFromID: async (req, res) => {
+   deleteFileFromID: async (req, res, next) => {
       try {
          const imgID = req.params.id || req.user.avatar.id;
          gfs.delete(new mongoose.Types.ObjectId(imgID), (err, data) => {
-            if (err)
-               return res.status(404).json({
-                  message: "Not found this file: " + err,
+            try {
+               if (err) throw new NotFoundError("No file available: " + imgID);
+               return res.status(200).json({
+                  msg: `Deleted successfully !`,
                });
-            return res.status(200).json({
-               message: `Deleted successfully !`,
-            });
+            } catch (gfsErr) {
+               next(gfsErr);
+            }
          });
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
-   deleteFileFromFileName: async (req, res) => {
+   deleteFileFromFileName: async (req, res, next) => {
       try {
          gfs.find({ filename: req.params.filename }).toArray((err, files) => {
-            if (err) return res.status(500).json(err);
-            if (!files[0] || files.length <= 0) {
-               return res.status(200).json("No files available");
-            }
-            gfs.delete(
-               new mongoose.Types.ObjectId(files[0]._id),
-               (errDelete, data) => {
-                  if (errDelete) {
-                     throw new NotFoundError("Not found file: " + err);
-                  }
-                  if (!req.error) {
-                     return res.status(StatusCodes.OK).json({
-                        msg: "Deleted successfully !!!",
-                     });
-                  }
+            try {
+               if (err)
+                  throw new BadRequestError("There's an error occurs " + err);
+               if (!files[0] || files.length <= 0) {
+                  throw new NotFoundError("No file available.");
                }
-            );
+               gfs.delete(
+                  new mongoose.Types.ObjectId(files[0]._id),
+                  (errDelete, data) => {
+                     if (errDelete) {
+                        throw new NotFoundError("Not found file: " + err);
+                     }
+                     if (!req.error) {
+                        return res.status(StatusCodes.OK).json({
+                           msg: "Deleted successfully !!!",
+                        });
+                     }
+                  }
+               );
+            } catch (gfsError) {
+               next(gfsError);
+            }
          });
       } catch (err) {
          next(err);

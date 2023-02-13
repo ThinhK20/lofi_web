@@ -1,3 +1,4 @@
+const NotFoundError = require("../errors/NotFoundError");
 const Image = require("../models/Image");
 const User = require("../models/User");
 
@@ -5,10 +6,7 @@ const userController = {
    uploadAvatar: async (req, res, next) => {
       try {
          const user = await User.findById(req.params.id);
-         if (!user)
-            return res.status(403).json({
-               message: "User is not exists !",
-            });
+         if (!user) throw new NotFoundError("This user doesn't exists.");
          req.params.filename = user.avatar;
 
          user.avatar = req.file.filename;
@@ -24,16 +22,13 @@ const userController = {
          await newImage.save();
          next();
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
-   updateProfileInfo: async (req, res) => {
+   updateProfileInfo: async (req, res, next) => {
       try {
          const user = await User.findById(req.params.id);
-         if (!user)
-            return res.status(403).json({
-               message: "User is not exists !",
-            });
+         if (!user) throw new NotFoundError("This user doesn't exists.");
          user.profile = {
             ...user.profile,
             birthdate: req.body.birthdate,
@@ -48,16 +43,13 @@ const userController = {
             message: "Update successfully !",
          });
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
    uploadWallpaper: async (req, res, next) => {
       try {
          const user = await User.findById(req.params.id);
-         if (!user)
-            return res.status(403).json({
-               message: "User is not exists !",
-            });
+         if (!user) throw new NotFoundError("This user doesn't exists.");
          req.params.filename = user.profile.wallpaper;
 
          user.profile.wallpaper = req.file.filename;
@@ -77,7 +69,7 @@ const userController = {
             });
          next();
       } catch (err) {
-         return res.status(500).json(err);
+         next(err);
       }
    },
 };

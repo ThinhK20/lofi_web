@@ -110,8 +110,8 @@ function SignUp() {
                     setPreviewImage(() => "");
                 },
                 onError: (err) => {
-                    if (err.response.data.message) {
-                        toast(`Register failed: ${err.response.data.message}`, {
+                    if (err.response.data.msg) {
+                        toast(`Register failed: ${err.response.data.msg}`, {
                             theme: "dark",
                             type: "error",
                         });
