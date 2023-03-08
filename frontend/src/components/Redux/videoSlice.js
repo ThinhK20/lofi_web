@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialValue = {
     videos: null,
+    progressPercent: 0,
 };
 const videoSlice = createSlice({
     name: "videoStorage",
@@ -22,10 +23,13 @@ const videoSlice = createSlice({
                 };
             }
         },
+        updateProgressPercent(state, action) {
+            state.progressPercent = action.payload;
+        },
     },
 });
 
 const { actions } = videoSlice;
-export const { updateVideoStorage } = actions;
+export const { updateVideoStorage, updateProgressPercent } = actions;
 
 export default videoSlice.reducer;

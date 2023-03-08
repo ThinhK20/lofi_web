@@ -88,12 +88,12 @@ function Profile() {
                                         href={user.user.profile.twitter}
                                         className={cx("text-content")}
                                     >
-                                        {user.user.profile.twitter !== "" && (
+                                        {user?.user?.profile?.twitter !== "" && (
                                             <>
                                                 @
                                                 {
-                                                    user.user.profile.twitter.split("/")[
-                                                        user.user.profile.twitter.split("/").length - 1
+                                                    user?.user?.profile?.twitter?.split("/")[
+                                                        user?.user?.profile?.twitter?.split("/").length - 1
                                                     ]
                                                 }
                                             </>
