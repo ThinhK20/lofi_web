@@ -22,7 +22,14 @@ const app = express();
 
 app.use(
    cors({
-      origin: "https://lofi-chill-api.onrender.com",
+      origin: [
+         "https://lofi-chill-api.onrender.com",
+         "http://localhost:9024",
+         "http://localhost:8000",
+         "https://lofi-aecm3p2v7-thinhk20.vercel.app/",
+      ],
+      headers: ["Content-Type"],
+      credentials: true,
    })
 );
 app.options("*", cors());
