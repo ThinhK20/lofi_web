@@ -64,13 +64,6 @@ const videoController = {
                if (!files[0] || files.length <= 0) {
                   throw new NotFoundError("No file available !");
                }
-               res.writeHead(200, {
-                  "Content-Type": "video/mp4",
-                  "Accept-Ranges": "bytes",
-                  Connection: "Keep-Alive",
-                  "Transfer-encoding": "chunked",
-                  "Content-Length": files[0].length,
-               });
                gfs.openDownloadStreamByName(req.params.videoName).pipe(res);
             } catch (gfsErr) {
                next(gfsErr);
