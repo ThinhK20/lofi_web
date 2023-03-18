@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const verifyAccountQuery = "https://lofi-web-api.vercel.app/v1/email/verify";
+const verifyAccountQuery = "https://lofi-chill-api.onrender.com/v1/email/verify";
 
 const emailAPI = {
     verifyAccount: async (email) => {

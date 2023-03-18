@@ -1,7 +1,7 @@
 import axios from "axios";
-const loginQuery = "https://lofi-web-api.vercel.app/v1/auth/login";
-const verifyQuery = "https://lofi-web-api.vercel.app/v1/auth/verify/";
-const registerQuery = "https://lofi-web-api.vercel.app/v1/auth/register";
+const loginQuery = "https://lofi-chill-api.onrender.com/v1/auth/login";
+const verifyQuery = "https://lofi-chill-api.onrender.com/v1/auth/verify/";
+const registerQuery = "https://lofi-chill-api.onrender.com/v1/auth/register";
 
 const authAPI = {
     loginUser: (body) => {

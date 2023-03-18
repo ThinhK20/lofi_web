@@ -27,6 +27,10 @@ function HomeThemeControl() {
     const audios = useRef([]);
 
     useEffect(() => {
+        console.log(audioResponse);
+    });
+
+    useEffect(() => {
         if (audios.current.length <= 0) {
             audios.current = audioSongs.map((song) => {
                 const newAudio = new Audio(song.audio);

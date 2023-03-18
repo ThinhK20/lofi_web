@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const audioFromTopicQuery = "https://lofi-web-api.vercel.app/v1/audio/topic/";
-const getAllAudioQuery = "https://lofi-web-api.vercel.app/v1/audio";
-const renderAudioQuery = "https://lofi-web-api.vercel.app/v1/audio/";
-const getAllAudioWithoutNoiseQuery = "https://lofi-web-api.vercel.app/v1/audio/songs";
+const audioFromTopicQuery = "https://lofi-chill-api.onrender.com/v1/audio/topic/";
+const getAllAudioQuery = "https://lofi-chill-api.onrender.com/v1/audio";
+const renderAudioQuery = "https://lofi-chill-api.onrender.com/v1/audio/";
+const getAllAudioWithoutNoiseQuery = "https://lofi-chill-api.onrender.com/v1/audio/songs";
 
 const audioAPI = {
     getAudioFromTopic: async (topic) => {

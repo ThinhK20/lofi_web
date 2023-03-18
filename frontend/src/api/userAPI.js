@@ -1,7 +1,7 @@
 import axios from "axios";
-const uploadAvatarQuery = "https://lofi-web-api.vercel.app/v1/user/upload/avatar/";
-const uploadWallpaperQuery = "https://lofi-web-api.vercel.app/v1/user/upload/wallpaper/";
-const updateProfileInfo = "https://lofi-web-api.vercel.app/v1/user/upload/info/";
+const uploadAvatarQuery = "https://lofi-chill-api.onrender.com/v1/user/upload/avatar/";
+const uploadWallpaperQuery = "https://lofi-chill-api.onrender.com/v1/user/upload/wallpaper/";
+const updateProfileInfo = "https://lofi-chill-api.onrender.com/v1/user/upload/info/";
 
 const userAPI = {
     uploadAvatar: async (data) => {
