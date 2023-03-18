@@ -64,6 +64,8 @@ const videoController = {
                if (!files[0] || files.length <= 0) {
                   throw new NotFoundError("No file available.");
                }
+               res.set("Access-Control-Allow-Origin", "*");
+               res.set("Access-Control-Allow-Methods", "GET, OPTIONS");
                gfs.openDownloadStreamByName(req.params.videoName).pipe(res);
             } catch (gfsErr) {
                next(gfsErr);
