@@ -62,7 +62,7 @@ const videoController = {
             try {
                if (err) throw new BadRequestError(err);
                if (!files[0] || files.length <= 0) {
-                  throw new NotFoundError("No file available !");
+                  throw new NotFoundError("No file available.");
                }
                gfs.openDownloadStreamByName(req.params.videoName).pipe(res);
             } catch (gfsErr) {
