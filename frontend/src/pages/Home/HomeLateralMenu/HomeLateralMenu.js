@@ -174,6 +174,16 @@ function HomeLateralMenu() {
         }
     }, [isAudioNoiseSuccess]);
 
+    useEffect(() => {
+        return () => {
+            if (noises.current && noises.current.length > 0) {
+                noises.current.forEach((noise) => {
+                    noise.audio.pause();
+                });
+            }
+        };
+    }, []);
+
     const handleScenes = (event) => {
         const value = event.target.getAttribute("value");
         if (currentScenes !== value) {

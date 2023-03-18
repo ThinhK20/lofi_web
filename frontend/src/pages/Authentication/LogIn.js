@@ -103,7 +103,7 @@ function Login() {
                         <a href="/forgot-password">Forgot password ?</a>
                     </h4>
                     <div className={cx("signup-btn-box")}>
-                        <button type="submit" className={cx("signup-btn")}>
+                        <button type="submit" className={cx("signup-btn")} onClick={() => setTimeout(5000)}>
                             Log In
                         </button>
                     </div>
