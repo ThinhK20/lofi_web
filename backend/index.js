@@ -23,11 +23,8 @@ const app = express();
 app.use(
    cors({
       origin: "https://lofi-chill-api.onrender.com",
-      headers: ["Content-Type"],
-      credentials: true,
    })
 );
-
 app.options("*", cors());
 
 app.use(morgan("combined"));
