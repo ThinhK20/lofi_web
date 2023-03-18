@@ -1,0 +1,3 @@
+export const GOOGLE_CLIENT_ID='1046881491625-1e3q8sp5jtj85oielg9r61sfqi5sc3cf.apps.googleusercontent.com'
+export const GOOGLE_CLIENT_SECRET='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' 
+export const DEFAULT_PROFILE_WALLPAPER="c5630f2b69d4c3d762d3aab8716f68e1.jpg"
