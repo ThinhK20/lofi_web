@@ -3,7 +3,7 @@ import videoAPI from "~/api/videoAPI";
 import { memo, useEffect, useState } from "react";
 import VideoComponent from "~/components/layout/components/VideoComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProgressPercent, updateVideoStorage } from "~/components/Redux/videoSlice";
+import { updateVideoStorage } from "~/components/Redux/videoSlice";
 import LoadingComponent from "~/components/layout/components/Loading";
 
 const HomeBackground = () => {
@@ -22,20 +22,15 @@ const HomeBackground = () => {
         if (!videos?.[currentScenes] && isVideoSuccess) {
             (async () => {
                 videoResponse.forEach(async (videoRes) => {
-                    const blobVideo = await videoAPI.getVideo(videoRes.videoName, (progress) =>
-                        dispatch(updateProgressPercent(progress)),
+                    dispatch(
+                        updateVideoStorage({
+                            topic: currentScenes,
+                            data: {
+                                caption: videoRes.caption,
+                                video: videoAPI.getVideo(videoRes.videoName),
+                            },
+                        }),
                     );
-                    if (blobVideo) {
-                        dispatch(
-                            updateVideoStorage({
-                                topic: currentScenes,
-                                data: {
-                                    caption: videoRes.caption,
-                                    blob: blobVideo,
-                                },
-                            }),
-                        );
-                    }
                 });
             })();
         }
@@ -46,7 +41,7 @@ const HomeBackground = () => {
         return theme === themeCondition && rainCondition === rain;
     };
 
-    const [isLoading, setIsLoadingVideo] = useState(false);
+    const [isLoading, setIsLoadingVideo] = useState(true);
 
     return (
         <>

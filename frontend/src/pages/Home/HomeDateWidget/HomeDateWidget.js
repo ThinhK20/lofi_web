@@ -8,7 +8,7 @@ import styles from "./HomeDateWidget.module.scss";
 const cx = classNames.bind(styles);
 function HomeDateWidget() {
     const dispatch = useDispatch();
-    const dateStatus = useSelector((state) => state.general).dateState;
+    const dateStatus = new Date(useSelector((state) => state.general).dateState);
     const handleClose = () => {
         dispatch(setActiveDateWidget(false));
     };

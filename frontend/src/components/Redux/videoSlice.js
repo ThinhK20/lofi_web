@@ -4,6 +4,7 @@ const initialValue = {
     videos: null,
     progressPercent: 0,
 };
+
 const videoSlice = createSlice({
     name: "videoStorage",
     initialState: initialValue,
@@ -12,13 +13,13 @@ const videoSlice = createSlice({
             if (state.videos && state.videos[action.payload.topic]) {
                 state.videos[action.payload.topic] = {
                     ...state.videos[action.payload.topic],
-                    [action.payload.data.caption]: URL.createObjectURL(action.payload.data.blob),
+                    [action.payload.data.caption]: action.payload.data.video,
                 };
             } else {
                 state.videos = {
                     ...state.videos,
                     [action.payload.topic]: {
-                        [action.payload.data.caption]: URL.createObjectURL(action.payload.data.blob),
+                        [action.payload.data.caption]: action.payload.data.video,
                     },
                 };
             }

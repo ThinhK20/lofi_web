@@ -24,6 +24,18 @@ function HomeThemeControl() {
         staleTime: Infinity,
     });
 
+    const audios = useRef([]);
+
+    useEffect(() => {
+        if (audios.current.length <= 0) {
+            audios.current = audioSongs.map((song) => {
+                const newAudio = new Audio(song.audio);
+                newAudio.loop = true;
+                return newAudio;
+            });
+        }
+    }, [audioSongs]);
+
     const handlePlaySong = () => {
         setPlaying(() => true);
     };
@@ -50,39 +62,41 @@ function HomeThemeControl() {
 
     // when the user clicked next or prev song
     useEffect(() => {
-        if (isAudioSuccess && playing) {
-            audioSongs.forEach((song, id) => {
+        if (playing) {
+            audios.current?.forEach((song, id) => {
                 if (id === currentSongId) {
-                    song.audio.play();
+                    song?.play();
                 } else {
-                    song.audio.pause();
+                    song?.pause();
                 }
             });
         }
-    }, [currentSongId, isAudioSuccess]);
+    }, [currentSongId]);
 
     useEffect(() => {
-        if (isAudioSuccess) {
-            if (playing) {
-                audioSongs[currentSongId]?.audio?.play();
-            } else {
-                audioSongs[currentSongId]?.audio?.pause();
-            }
+        if (playing) {
+            audios.current[currentSongId]?.play();
+        } else {
+            audios.current[currentSongId]?.pause();
         }
     }, [playing]);
 
     useEffect(() => {
-        if (isAudioSuccess) {
-            audioSongs.forEach((song) => {
-                song.audio.muted = mutedAudio;
+        if (audios && audios.current) {
+            audios.current?.forEach((song) => {
+                if (song) {
+                    song.muted = mutedAudio;
+                }
             });
         }
     }, [mutedAudio]);
 
     useEffect(() => {
-        if (isAudioSuccess) {
-            audioSongs.forEach((song) => {
-                song.audio.volume = audioVolume;
+        if (audios) {
+            audios?.current?.forEach((song) => {
+                if (song) {
+                    song.volume = audioVolume;
+                }
             });
         }
     }, [audioVolume]);
@@ -95,8 +109,7 @@ function HomeThemeControl() {
                         return {
                             ...song,
                             audio: (() => {
-                                const newAudio = new Audio(audioAPI.renderAudio(song.audioName));
-                                newAudio.loop = true;
+                                const newAudio = audioAPI.renderAudio(song.audioName);
                                 return newAudio;
                             })(),
                         };
@@ -105,14 +118,6 @@ function HomeThemeControl() {
             );
         }
     }, [isAudioSuccess]);
-
-    useEffect(() => {
-        return () => {
-            if (isAudioSuccess) {
-                audioSongs[currentSongId]?.audio?.pause();
-            }
-        };
-    }, []);
 
     return (
         <>

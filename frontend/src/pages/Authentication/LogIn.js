@@ -11,6 +11,7 @@ import { setUserData } from "~/components/Redux/userSlice";
 import emailAPI from "~/api/emailAPI";
 import GoogleAuthentication from "~/components/layout/components/GoogleAuthentication/GoogleAuthentication";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 
@@ -58,7 +59,13 @@ function Login() {
                         );
                     } else {
                         dispatch(setUserData(data.data));
-                        navigate("/");
+                        toast("Login successfully ! Redirecting...", {
+                            theme: "colored",
+                            type: "success",
+                        });
+                        setTimeout(() => {
+                            navigate("/");
+                        }, 3000);
                     }
                 },
                 onError: (error) => {

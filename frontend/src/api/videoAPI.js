@@ -12,16 +12,9 @@ const videoAPI = {
         const videoURLs = await axios.get(getVideosQuery + topic);
         return videoURLs.data;
     },
-    getVideo: async (videoName, updateProgress) => {
-        const videos = await axios.get(getVideoQuery + videoName, {
-            responseType: "blob",
-            onDownloadProgress: (progressEvent) => {
-                const { loaded, total } = progressEvent;
-                let percentage = Math.floor((loaded * 100) / total);
-                updateProgress(percentage);
-            },
-        });
-        if (videos) return videos.data;
+    getVideo: (videoName) => {
+        const videos = getVideoQuery + videoName;
+        return videos;
     },
 };
 

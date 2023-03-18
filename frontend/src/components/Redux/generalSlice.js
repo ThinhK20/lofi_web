@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialValue = {
-    dateState: new Date(),
+    dateState: new Date().toISOString(),
     activeDateWidget: false,
     theme: "light",
     rain: false,
@@ -16,7 +16,8 @@ const generalSlice = createSlice({
     initialState: initialValue,
     reducers: {
         updateDate(state) {
-            state.dateState = new Date();
+            const date = new Date();
+            state.dateState = date.toISOString();
         },
         setActiveDateWidget(state, action) {
             state.activeDateWidget = action.payload;

@@ -4,7 +4,15 @@ import { memo, useEffect, useState } from "react";
 
 import { images } from "~/assets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faExpand, faMoon, faShareNodes, faSun, faVolumeLow, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
+import {
+    faBars,
+    faExpand,
+    faMoon,
+    faShareNodes,
+    faSun,
+    faVolumeLow,
+    faVolumeMute,
+} from "@fortawesome/free-solid-svg-icons";
 import { toggleFullScreen } from "./Function";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveDateWidget, setMutedAudio, setTheme, updateDate } from "~/components/Redux/generalSlice";
@@ -15,17 +23,18 @@ import imageAPI from "~/api/imageAPI";
 
 const cx = classNames.bind(styles);
 function Header() {
-    const user = useSelector(state => state.user) 
+    const user = useSelector((state) => state.user);
     // const user = null
-    const {dateState, activeDateWidget, theme, mutedAudio } = useSelector((state) => state.general);
-    const [visibleOptions, setVisibleOptions] = useState(false); 
+    const { dateState, activeDateWidget, theme, mutedAudio } = useSelector((state) => state.general);
+    const [visibleOptions, setVisibleOptions] = useState(false);
 
-    const dispatch = useDispatch(); 
+    const dateValue = new Date(dateState);
+
+    const dispatch = useDispatch();
 
     const handleOpenDateStatus = () => {
         dispatch(setActiveDateWidget(!activeDateWidget));
-    }; 
-
+    };
 
     const handleTheme = () => {
         dispatch(theme === "dark" ? setTheme("light") : setTheme("dark"));
@@ -33,13 +42,11 @@ function Header() {
 
     const handleShowTippyOptions = () => {
         setVisibleOptions(!visibleOptions);
-    };  
-
-
+    };
 
     const toggleAudio = () => {
-        dispatch(setMutedAudio(!mutedAudio)) 
-    }
+        dispatch(setMutedAudio(!mutedAudio));
+    };
 
     useEffect(() => {
         const intervalTimeId = setInterval(() => {
@@ -48,17 +55,17 @@ function Header() {
 
         return () => clearInterval(intervalTimeId);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); 
+    }, []);
 
     return (
         <header className={cx("wrapper")}>
-            <Link to="/" className={cx("logo")} >
+            <Link to="/" className={cx("logo")}>
                 <img src={images.logo} alt="Logo-lofi" />
             </Link>
             <div className={cx("actions")}>
                 <div className={cx("time-box")} onClick={handleOpenDateStatus}>
                     <span>
-                        {dateState.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true })}
+                        {dateValue.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true })}
                     </span>
                 </div>
                 <button className={cx("switch-btn", theme === "dark" && "dark")} onClick={handleTheme}>
@@ -67,11 +74,14 @@ function Header() {
                 </button>
                 {user ? (
                     <Link to="profile" href="." className={cx("user-wrapper")}>
-                        <img className={cx("user-avatar")} src={!user.user.service ? imageAPI.getImage(user.user.avatar) : user.user.avatar} alt="user-avatar" />
+                        <img
+                            className={cx("user-avatar")}
+                            src={!user.user.service ? imageAPI.getImage(user.user.avatar) : user.user.avatar}
+                            alt="user-avatar"
+                        />
                     </Link>
                 ) : (
                     <>
-                        
                         <Link to="login" className={cx("authentication-btn")}>
                             Log in
                         </Link>
@@ -84,14 +94,10 @@ function Header() {
                 <div className={cx("options")}>
                     <button className={cx("option-btn")}>
                         <FontAwesomeIcon icon={faShareNodes} />
-                    </button> 
-                   
-                    <button className={cx("option-btn")} onClick={toggleAudio}> 
-                        {mutedAudio ? 
-                            <FontAwesomeIcon icon={faVolumeMute}/>
-                            : 
-                            <FontAwesomeIcon icon={faVolumeLow} />
-                        }
+                    </button>
+
+                    <button className={cx("option-btn")} onClick={toggleAudio}>
+                        {mutedAudio ? <FontAwesomeIcon icon={faVolumeMute} /> : <FontAwesomeIcon icon={faVolumeLow} />}
                     </button>
                     <button className={cx("option-btn")} onClick={toggleFullScreen}>
                         <FontAwesomeIcon icon={faExpand} />

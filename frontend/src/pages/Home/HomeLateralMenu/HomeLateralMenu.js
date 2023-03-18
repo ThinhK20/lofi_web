@@ -6,6 +6,7 @@ import { Slider } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBookOpen,
+    faCirclePause,
     faCirclePlay,
     faGuitar,
     faImage,
@@ -50,13 +51,31 @@ function HomeLateralMenu() {
     const dispatch = useDispatch();
     const { mutedAudio, currentSongId, rain, currentScenes } = useSelector((state) => state.general);
 
+    const noises = useRef([]);
+
+    useEffect(() => {
+        if (noises.current.length <= 0) {
+            noises.current = audioNoises.map((noise) => {
+                const newNoise = {
+                    ...noise,
+                    audio: (() => {
+                        const newState = new Audio(noise.audio);
+                        newState.loop = true;
+                        return newState;
+                    })(),
+                };
+                return newNoise;
+            });
+        }
+    }, [audioNoises]);
+
     const handleNoise = (e, index) => {
         const value = e.target.value / 100;
-        audioNoises[index].audio.volume = value;
+        noises.current[index].volume = value;
         if (value === 0) {
-            audioNoises[index].audio.pause();
+            noises.current[index].audio.pause();
         } else {
-            audioNoises[index].audio.play();
+            noises.current[index].audio.play();
         }
     };
 
@@ -113,7 +132,7 @@ function HomeLateralMenu() {
 
     useEffect(() => {
         if (isAudioNoiseSuccess) {
-            const rainNoise = audioNoises.find((x) => x.caption === "rain-city")?.audio;
+            const rainNoise = noises.current.find((x) => x.caption === "rain-city")?.audio;
             if (rain) {
                 if (rainNoise) {
                     rainNoise.volume = 1;
@@ -128,11 +147,9 @@ function HomeLateralMenu() {
     }, [rain]);
 
     useEffect(() => {
-        if (isAudioNoiseSuccess) {
-            audioNoises.forEach((noise) => {
-                noise.audio.muted = mutedAudio;
-            });
-        }
+        noises.current.forEach((noise) => {
+            noise.audio.muted = mutedAudio;
+        });
     }, [mutedAudio]);
 
     useEffect(() => {
@@ -147,8 +164,7 @@ function HomeLateralMenu() {
                                 .map((ch) => ch.charAt(0).toUpperCase() + ch.slice(1))
                                 .join(" "),
                             audio: (() => {
-                                const newAudio = new Audio(audioAPI.renderAudio(noise.audioName));
-                                newAudio.loop = true;
+                                const newAudio = audioAPI.renderAudio(noise.audioName);
                                 return newAudio;
                             })(),
                         };
@@ -157,16 +173,6 @@ function HomeLateralMenu() {
             );
         }
     }, [isAudioNoiseSuccess]);
-
-    useEffect(() => {
-        return () => {
-            if (isAudioNoiseSuccess) {
-                audioNoises.forEach((noise) => {
-                    noise.audio.pause();
-                });
-            }
-        };
-    }, []);
 
     const handleScenes = (event) => {
         const value = event.target.getAttribute("value");
@@ -335,7 +341,7 @@ function HomeLateralMenu() {
                                                                 </h1>
                                                                 <FontAwesomeIcon
                                                                     className={cx("tippy-song-play-icon")}
-                                                                    icon={faCirclePlay}
+                                                                    icon={faCirclePause}
                                                                 />
                                                             </div>
                                                         );
