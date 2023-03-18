@@ -1,7 +1,7 @@
-const dotenv = require('dotenv')
-dotenv.config()
+const dotenv = require("dotenv");
+dotenv.config();
 const variableApp = {
-    mongooseUrl: process.env.MONGOOSE_URL
-}
+   mongooseUrl: process.env.MONGODB_URI,
+};
 
-module.exports = variableApp
+module.exports = variableApp;

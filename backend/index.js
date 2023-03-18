@@ -51,7 +51,7 @@ app.use(errorHandlerMiddleware);
 
 const startServer = async () => {
    try {
-      await mongoose.connect(process.env.MONGOOSE_URL, () => {
+      await mongoose.connect(process.env.MONGODB_URI, () => {
          console.log("Connected to database");
          const port = process.env.PORT || 8000;
          app.listen(port, () => {
