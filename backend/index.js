@@ -20,7 +20,13 @@ const errorHandlerMiddleware = require("./middlewares/ErrorHandlerMiddleware");
 dotenv.config();
 const app = express();
 
-app.use(cors());
+app.use(
+   cors({
+      origin: "https://lofi-chill-api.onrender.com",
+      headers: ["Content-Type"],
+      credentials: true,
+   })
+);
 
 app.use(morgan("combined"));
 app.use(cookieParser());
