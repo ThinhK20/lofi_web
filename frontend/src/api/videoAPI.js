@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const uploadQuery = "http://localhost:8000/v1/video/upload";
-const getVideosQuery = "http://localhost:8000/v1/video/topic/";
-const getVideoQuery = "http://localhost:8000/v1/video/";
+const uploadQuery = "https://lofi-web-api.vercel.app/v1/video/upload";
+const getVideosQuery = "https://lofi-web-api.vercel.app/v1/video/topic/";
+const getVideoQuery = "https://lofi-web-api.vercel.app/v1/video/";
 
 const videoAPI = {
     uploadVideo: async (data) => {

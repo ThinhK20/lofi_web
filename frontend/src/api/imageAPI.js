@@ -1,10 +1,9 @@
-const imageQuery = "http://localhost:8000/v1/image/"
-
+const imageQuery = "https://lofi-web-api.vercel.app/v1/image/";
 
 const imageAPI = {
     getImage: (imageName) => {
-        return imageQuery + imageName
-    }
-}
+        return imageQuery + imageName;
+    },
+};
 
-export default imageAPI
+export default imageAPI;

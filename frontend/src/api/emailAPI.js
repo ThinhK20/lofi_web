@@ -1,14 +1,12 @@
-import axios from "axios"
+import axios from "axios";
 
-const verifyAccountQuery = "http://localhost:8000/v1/email/verify"
-
+const verifyAccountQuery = "https://lofi-web-api.vercel.app/v1/email/verify";
 
 const emailAPI = {
-    verifyAccount: async(email) => {
-        const result = await axios.post(verifyAccountQuery, email)
-        return result
+    verifyAccount: async (email) => {
+        const result = await axios.post(verifyAccountQuery, email);
+        return result;
     },
-    
-} 
+};
 
-export default emailAPI
+export default emailAPI;
