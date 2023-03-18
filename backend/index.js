@@ -53,8 +53,9 @@ const startServer = async () => {
    try {
       await mongoose.connect(process.env.MONGOOSE_URL, () => {
          console.log("Connected to database");
-         app.listen(8000, () => {
-            console.log("Server is running at http://localhost:8000");
+         const port = process.env.PORT || 8000;
+         app.listen(port, () => {
+            console.log("Server is running at http://localhost:" + port);
          });
       });
    } catch (err) {
