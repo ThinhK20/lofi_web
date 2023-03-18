@@ -28,6 +28,8 @@ app.use(
    })
 );
 
+app.options("*", cors());
+
 app.use(morgan("combined"));
 app.use(cookieParser());
 app.use(express.json());
