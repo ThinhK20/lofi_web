@@ -12,62 +12,43 @@
     right: 0;
     bottom: 0;  
    z-index: -1;
-    
 }
 
 
-.img { 
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 250px;
-} 
-
-@mixin position-center($text-align: center) {
+.container div {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto; 
-  padding-top: 20px;
-  text-align: $text-align;
+  background: #fff;
+  opacity: 1;
+  border-radius: 50%;
+  animation: loading 1.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.container div:nth-child(2) {
+  animation-delay: -.7s;
 }
 
-.loading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%; 
-  height: 100%;
-  background: #000;
-  z-index: 9999;
+.loading div {
+  position: absolute;
+  background: #fff;
+  opacity: 1;
+  border-radius: 50%;
+  animation: loading 1.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
-
-.loading-text {
-  @include position-center;
-  width: 100%;
-  height: 100px;
-  line-height: 100px;
-  span {
-    display: inline-block;
-    margin: 0 5px;
-    color: var(--color-primary);
-    font-size: 5rem;
-    @for $i from 0 through 6 {
-      &:nth-child(#{$i + 1}) {
-        filter: blur(0px);
-        animation: blur-text 1.5s calc($i/5)+s infinite linear alternate;
-      }
-    }
+.loading div:nth-child(2) {
+  animation-delay: -.7s;
+}
+@keyframes loading {
+  0% {
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    opacity: 1;
   }
-}
-
-@keyframes blur-text {
-  0% {filter: blur(0px);}
-  100% {filter: blur(4px);}
-}
-
-@keyframes loadingAnimation {
+  100% {
+    top: calc(50% - 29px); 
+    left: calc(50% - 29px);
+    width: 58px;
+    height: 58px;
+    opacity: 0;
+  }
 }

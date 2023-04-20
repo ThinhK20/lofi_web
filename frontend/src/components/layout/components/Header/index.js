@@ -20,6 +20,7 @@ import Tippy from "@tippyjs/react/headless"; // different import path!
 import TippyOption from "./TippyOptions/TippyOptions";
 import { Link } from "react-router-dom";
 import imageAPI from "~/api/imageAPI";
+import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 function Header() {
@@ -57,6 +58,14 @@ function Header() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleCopyToClipboard = () => {
+        navigator.clipboard.writeText(window.location.href);
+        toast("Copied web url to your clipboard.", {
+            theme: "dark",
+            autoClose: 1000,
+        });
+    };
+
     return (
         <header className={cx("wrapper")}>
             <Link to="/" className={cx("logo")}>
@@ -73,7 +82,7 @@ function Header() {
                     <span className={cx("slider")} />
                 </button>
                 {user ? (
-                    <Link to="profile" href="." className={cx("user-wrapper")}>
+                    <Link to="/profile" href="." className={cx("user-wrapper")}>
                         <img
                             className={cx("user-avatar")}
                             src={!user.user.service ? imageAPI.getImage(user.user.avatar) : user.user.avatar}
@@ -82,17 +91,17 @@ function Header() {
                     </Link>
                 ) : (
                     <>
-                        <Link to="login" className={cx("authentication-btn")}>
+                        <Link to="/login" className={cx("authentication-btn")}>
                             Log in
                         </Link>
-                        <Link to="signup" className={cx("authentication-btn")}>
+                        <Link to="/signup" className={cx("authentication-btn")}>
                             Sign up
                         </Link>
                     </>
                 )}
 
                 <div className={cx("options")}>
-                    <button className={cx("option-btn")}>
+                    <button onClick={handleCopyToClipboard} className={cx("option-btn")}>
                         <FontAwesomeIcon icon={faShareNodes} />
                     </button>
 

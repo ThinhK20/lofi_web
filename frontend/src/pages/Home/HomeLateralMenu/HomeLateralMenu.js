@@ -337,7 +337,7 @@ function HomeLateralMenu() {
                                 <div className={cx("tippy-title", "tippy-item")} style={{ padding: "10px 0" }}>
                                     <h3 className={cx("tippy-title-text")}>
                                         Songs
-                                        <div className={cx("hidden-scroll")} style={{ height: "250px" }}>
+                                        <div className={cx("hidden-scroll")} style={{ minHeight: "200px" }}>
                                             {isAudioSuccess &&
                                                 audioResponse.data.map((obj, index) => {
                                                     if (index === currentSongId) {

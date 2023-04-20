@@ -119,6 +119,12 @@ function HomeThemeControl() {
         }
     }, [isAudioSuccess]);
 
+    useEffect(() => {
+        return () => {
+            audios.current[currentSongId]?.pause();
+        };
+    }, []);
+
     return (
         <>
             {isAudioSuccess && (
