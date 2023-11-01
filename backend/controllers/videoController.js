@@ -67,8 +67,24 @@ const videoController = {
                const readStream = gfs.openDownloadStreamByName(
                   req.params.videoName
                );
-               res.set("Content-Type", "video/mp4"); // Set the content type of the response
-               res.set("Access-Control-Allow-Origin", "*"); // Set the Access-Control-Allow-Origin header
+
+               const range = req.headers.range;
+               const videoSize = files[0].length;
+               const start = Number(range.replace(/\D/g, ""));
+               const end = videoSize - 1;
+               const contentLength = end - start + 1;
+
+               const headers = {
+                  "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+                  "Accept-Ranges": "bytes",
+                  "Content-Length": contentLength,
+                  "Content-Type": "video/mp4",
+                  "Access-Control-Allow-Origin": "*",
+               };
+
+               console.log("Headers: ", headers);
+
+               res.writeHead(206, headers);
                readStream.pipe(res);
             } catch (gfsErr) {
                next(gfsErr);
