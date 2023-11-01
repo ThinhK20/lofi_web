@@ -82,8 +82,6 @@ const videoController = {
                   "Access-Control-Allow-Origin": "*",
                };
 
-               console.log("Headers: ", headers);
-
                res.writeHead(206, headers);
                readStream.pipe(res);
             } catch (gfsErr) {
