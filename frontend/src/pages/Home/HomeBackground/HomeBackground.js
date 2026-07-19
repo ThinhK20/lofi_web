@@ -18,18 +18,27 @@ const HomeBackground = () => {
 
     useEffect(() => {
         const preloadLayer = activeLayer === 0 ? 1 : 0;
+        const currentVideo = layers[activeLayer];
+        const cachedVideo = layers[preloadLayer];
+
+        if (currentVideo.src === source) {
+            return;
+        }
+
+        if (cachedVideo.src === source) {
+            if (cachedVideo.ready) {
+                setActiveLayer(preloadLayer);
+            }
+            return;
+        }
 
         setLayers((currentLayers) => {
-            if (currentLayers[activeLayer].src === source || currentLayers[preloadLayer].src === source) {
-                return currentLayers;
-            }
-
             return currentLayers.map((layer, index) => (
                 index === preloadLayer ? { src: source, ready: false } : layer
             ));
         });
         setHasError(false);
-    }, [activeLayer, source]);
+    }, [activeLayer, layers, source]);
 
     const handleReady = (index, readySource) => {
         setLayers((currentLayers) => currentLayers.map((layer, layerIndex) => (

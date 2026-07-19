@@ -11,8 +11,8 @@ vi.mock("~/assets", () => ({
 }));
 
 vi.mock("~/components/layout/components/VideoComponent", () => ({
-    default: ({ srcVideo, onError, onLoadStart, onReady }) => (
-        <video data-testid="background-video" src={srcVideo} onError={onError} onLoadStart={onLoadStart} onCanPlay={onReady} />
+    default: ({ srcVideo, isVisible, onError, onLoadStart, onReady }) => (
+        <video data-testid="background-video" data-visible={isVisible} src={srcVideo} onError={onError} onLoadStart={onLoadStart} onCanPlay={onReady} />
     ),
 }));
 
@@ -72,5 +72,18 @@ describe("HomeBackground", () => {
         expect(videos).toHaveLength(2);
         expect(videos[1]).toHaveAttribute("src", expect.stringContaining("video/Day-rainny.mp4"));
         expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    });
+
+    it("returns to an already loaded background without waiting for another media event", () => {
+        const { store } = renderBackground();
+        fireEvent.canPlay(screen.getByTestId("background-video"));
+
+        act(() => store.dispatch(setRain(true)));
+        fireEvent.canPlay(screen.getAllByTestId("background-video")[1]);
+
+        act(() => store.dispatch(setRain(false)));
+
+        expect(screen.getAllByTestId("background-video")[0]).toHaveAttribute("data-visible", "true");
+        expect(screen.getAllByTestId("background-video")[1]).toHaveAttribute("data-visible", "false");
     });
 });
