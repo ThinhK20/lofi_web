@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act } from "react";
 import { Provider } from "react-redux";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import generalReducer from "~/components/Redux/generalSlice";
+import generalReducer, { setRain } from "~/components/Redux/generalSlice";
 import HomeBackground from "./HomeBackground";
 
 vi.mock("~/assets", () => ({
@@ -21,11 +22,14 @@ vi.mock("~/components/layout/components/Loading", () => ({
 
 const renderBackground = () => {
     const store = configureStore({ reducer: { general: generalReducer } });
-    return render(
+    return {
+        store,
+        ...render(
         <Provider store={store}>
             <HomeBackground />
         </Provider>,
-    );
+        ),
+    };
 };
 
 afterEach(cleanup);
@@ -56,5 +60,17 @@ describe("HomeBackground", () => {
 
         expect(screen.queryByRole("status")).not.toBeInTheDocument();
         expect(screen.getByTestId("background-video").parentElement).toHaveAttribute("aria-busy", "false");
+    });
+
+    it("keeps the current video visible while the next local background preloads", () => {
+        const { store } = renderBackground();
+        fireEvent.canPlay(screen.getByTestId("background-video"));
+
+        act(() => store.dispatch(setRain(true)));
+
+        const videos = screen.getAllByTestId("background-video");
+        expect(videos).toHaveLength(2);
+        expect(videos[1]).toHaveAttribute("src", expect.stringContaining("video/Day-rainny.mp4"));
+        expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
 });
