@@ -8,7 +8,6 @@ const initialValue = {
     audioVolume: 1,
     mutedAudio: false,
     currentSongId: 0,
-    currentScenes: "chill-vibes",
 };
 
 const generalSlice = createSlice({
@@ -37,16 +36,12 @@ const generalSlice = createSlice({
         setCurrentSongId(state, action) {
             state.currentSongId = action.payload;
         },
-        setCurrentScenes(state, action) {
-            state.currentScenes = action.payload;
-        },
     },
 });
 
 const { actions } = generalSlice;
 export const {
     updateDate,
-    setCurrentScenes,
     setActiveDateWidget,
     setTheme,
     setRain,

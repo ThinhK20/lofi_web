@@ -1,19 +1,74 @@
 .wrapper {
+    align-items: center;
+    appearance: none;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
     z-index: 99;
     position: absolute;
     top: 15%;
     right: 20%;
     transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    padding: 16px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
     border-radius: 50%;
     transition: all 0.4s ease;
     cursor: pointer;
 
     &:hover {
-        color: #91ccc2;
-        background-color: rgba(0, 0, 0, 0.6);
-        box-shadow: 0 5px 5px rgb(0 0 0 / 20%);
+        box-shadow: 0 5px 12px rgb(0 0 0 / 35%);
     }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 3px;
+    }
+}
+
+.theme-dark {
+    --rain-primary: #45658d;
+    background-color: rgba(0, 0, 0, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #fff;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.88);
+        color: #fff;
+    }
+}
+
+.theme-light {
+    --rain-primary: var(--color-primary);
+    background-color: rgba(255, 255, 255, 0.76);
+    border: 1px solid rgba(20, 20, 20, 0.22);
+    color: #1b1b1b;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.92);
+        color: #1b1b1b;
+    }
+}
+
+.active {
+    &.theme-dark {
+        background-color: rgba(44, 48, 58, 0.9);
+        border-color: var(--rain-primary);
+        color: var(--rain-primary);
+    }
+
+    &.theme-light {
+        background-color: rgba(255, 255, 255, 0.96);
+        border-color: var(--rain-primary);
+        color: var(--rain-primary);
+    }
+
+    &:hover {
+        color: var(--rain-primary);
+    }
+}
+
+.icon {
+    font-size: 2rem;
 }

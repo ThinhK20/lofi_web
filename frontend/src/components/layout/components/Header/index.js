@@ -19,13 +19,10 @@ import { setActiveDateWidget, setMutedAudio, setTheme, updateDate } from "~/comp
 import Tippy from "@tippyjs/react/headless"; // different import path!
 import TippyOption from "./TippyOptions/TippyOptions";
 import { Link } from "react-router-dom";
-import imageAPI from "~/api/imageAPI";
 import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 function Header() {
-    const user = useSelector((state) => state.user);
-    // const user = null
     const { dateState, activeDateWidget, theme, mutedAudio } = useSelector((state) => state.general);
     const [visibleOptions, setVisibleOptions] = useState(false);
 
@@ -81,25 +78,6 @@ function Header() {
                     <FontAwesomeIcon icon={theme === "dark" ? faMoon : faSun} className={cx("switch-icon")} />
                     <span className={cx("slider")} />
                 </button>
-                {user ? (
-                    <Link to="/profile" href="." className={cx("user-wrapper")}>
-                        <img
-                            className={cx("user-avatar")}
-                            src={!user.user.service ? imageAPI.getImage(user.user.avatar) : user.user.avatar}
-                            alt="user-avatar"
-                        />
-                    </Link>
-                ) : (
-                    <>
-                        <Link to="/login" className={cx("authentication-btn")}>
-                            Log in
-                        </Link>
-                        <Link to="/signup" className={cx("authentication-btn")}>
-                            Sign up
-                        </Link>
-                    </>
-                )}
-
                 <div className={cx("options")}>
                     <button onClick={handleCopyToClipboard} className={cx("option-btn")}>
                         <FontAwesomeIcon icon={faShareNodes} />

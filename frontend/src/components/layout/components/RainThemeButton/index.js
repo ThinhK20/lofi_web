@@ -9,13 +9,23 @@ import styles from "./RainThemeButton.module.scss";
 const cx = classNames.bind(styles);
 function RainThemeButton() {
     const dispatch = useDispatch();
-    const { rain } = useSelector((state) => state.general);
+    const { rain, theme } = useSelector((state) => state.general);
 
     const handleRain = () => {
         dispatch(setRain(!rain));
     };
 
-    return <FontAwesomeIcon icon={faCloudRain} className={cx("wrapper")} onClick={handleRain} />;
+    return (
+        <button
+            type="button"
+            className={cx("wrapper", `theme-${theme}`, rain && "active")}
+            onClick={handleRain}
+            aria-label={rain ? "Turn rain off" : "Turn rain on"}
+            aria-pressed={rain}
+        >
+            <FontAwesomeIcon icon={faCloudRain} className={cx("icon")} />
+        </button>
+    );
 }
 
 export default memo(RainThemeButton);

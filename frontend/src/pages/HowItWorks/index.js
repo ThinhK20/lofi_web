@@ -19,18 +19,12 @@ const HowItWorks = () => {
             <div className={cx("box")}>
                 <h1>How it works</h1>
                 <span>
-                    The techniques using in my website:
+                    This offline version runs entirely in your browser:
                     <ul>
-                        <li>ReactJS</li>
-                        <li>GridFs</li>
-                        <li>ExpressJS</li>
-                        <li>PassportJS</li>
-                        <li>Redux</li>
-                        <li>React Query</li>
-                        <li>Tippy</li>
-                        <li>JWT</li>
-                        <li>Sending automatically email with Sendgrid Service</li>
-                        <li>MongoDB</li>
+                        <li>React</li>
+                        <li>Local video and audio assets</li>
+                        <li>Redux for player preferences</li>
+                        <li>Browser audio controls</li>
                     </ul>
                 </span>
             </div>

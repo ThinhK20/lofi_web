@@ -1,74 +1,36 @@
-import { useQuery } from "@tanstack/react-query";
-import videoAPI from "~/api/videoAPI";
-import { memo, useEffect, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import VideoComponent from "~/components/layout/components/VideoComponent";
-import { useDispatch, useSelector } from "react-redux";
-import { updateVideoStorage } from "~/components/Redux/videoSlice";
+import { useSelector } from "react-redux";
+import { images } from "~/assets";
+import { getBackgroundVideo } from "~/data/mediaCatalog";
 import LoadingComponent from "~/components/layout/components/Loading";
+import styles from "./HomeBackground.module.scss";
 
 const HomeBackground = () => {
-    const { currentScenes, theme, rain } = useSelector((state) => state.general);
-
-    const { data: videoResponse, isSuccess: isVideoSuccess } = useQuery({
-        queryKey: ["videoData", currentScenes],
-        queryFn: () => videoAPI.getVideoUrlsFromTopic(currentScenes),
-        staleTime: Infinity,
-    });
-
-    const { videos } = useSelector((state) => state.videoStorage);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (!videos?.[currentScenes] && isVideoSuccess) {
-            (async () => {
-                videoResponse.forEach(async (videoRes) => {
-                    dispatch(
-                        updateVideoStorage({
-                            topic: currentScenes,
-                            data: {
-                                caption: videoRes.caption,
-                                video: videoAPI.getVideo(videoRes.videoName),
-                            },
-                        }),
-                    );
-                });
-            })();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isVideoSuccess, currentScenes, videoResponse, videos]);
-
-    const checkShowVideo = (themeCondition, rainCondition) => {
-        return theme === themeCondition && rainCondition === rain;
-    };
-
-    const [isLoading, setIsLoadingVideo] = useState(true);
+    const { theme, rain } = useSelector((state) => state.general);
+    const [isReady, setIsReady] = useState(false);
+    const [hasError, setHasError] = useState(false);
+    const source = useMemo(() => getBackgroundVideo({ theme, rain }), [theme, rain]);
 
     return (
-        <>
-            {(!videos || !videos?.[currentScenes] || isLoading) && <LoadingComponent />}
-            <>
-                <VideoComponent
-                    srcVideo={videos?.[currentScenes]?.["day-sunny"]}
-                    checkShowVideo={checkShowVideo("light", false)}
-                    onLoading={checkShowVideo("light", false) && setIsLoadingVideo}
-                />
-                <VideoComponent
-                    srcVideo={videos?.[currentScenes]?.["day-rainny"]}
-                    checkShowVideo={checkShowVideo("light", true)}
-                    onLoading={checkShowVideo("light", true) && setIsLoadingVideo}
-                />
-                <VideoComponent
-                    srcVideo={videos?.[currentScenes]?.["night-clear"]}
-                    checkShowVideo={checkShowVideo("dark", false)}
-                    onLoading={checkShowVideo("dark", false) && setIsLoadingVideo}
-                />
-                <VideoComponent
-                    srcVideo={videos?.[currentScenes]?.["night-rainny"]}
-                    checkShowVideo={checkShowVideo("dark", true)}
-                    onLoading={checkShowVideo("dark", true) && setIsLoadingVideo}
-                />
-            </>
-        </>
+        <div className={styles.background} aria-busy={!isReady && !hasError}>
+            {hasError && <img src={images.scenes_background_chillVipe} alt="Chill Vibes scene" className={styles.preview} />}
+            {!isReady && !hasError && <LoadingComponent />}
+            <VideoComponent
+                key={source}
+                srcVideo={source}
+                onReady={() => {
+                    setHasError(false);
+                    setIsReady(true);
+                }}
+                onLoadStart={() => {
+                    setHasError(false);
+                    setIsReady(false);
+                }}
+                onError={() => setHasError(true)}
+                isVisible={isReady && !hasError}
+            />
+        </div>
     );
 };
 
