@@ -4,6 +4,10 @@ Your calm, private corner of the web. Lofi Chill pairs local lofi playlists, amb
 
 Everything runs locally in the browser—no account, no hosted Render API, and no waiting for a remote media server.
 
+| A calm sunny workspace | Rainy-night focus mode |
+| --- | --- |
+| ![Lofi Chill sunny workspace](docs/images/lofi-chill-day.png) | ![Lofi Chill rainy-night mood controls](docs/images/lofi-chill-night-rain.png) |
+
 ## Highlights
 
 - Four local background videos: sunny day, rainy day, clear night, and rainy night.
